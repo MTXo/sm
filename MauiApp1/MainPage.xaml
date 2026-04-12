@@ -56,7 +56,7 @@
                 <Switch IsToggled="True" />
             </HorizontalStackLayout>
 
-            <Entry Placeholder="Entry Labelki Zapisu"/>
+            <Entry Placeholder="Entry Label Zapisu"/>
 
             <Button Text="przywróć zaznaczony" HorizontalOptions="Start"/>
 
