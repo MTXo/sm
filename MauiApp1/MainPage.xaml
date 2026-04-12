@@ -3,7 +3,7 @@
              xmlns:x="http://schemas.microsoft.com/winfx/2009/xaml"
              x:Class="MauiApp1.MainPage"
              >
-    
+
     <Grid ColumnDefinitions="100, *, 900"
           RowDefinitions="*, Auto"
           ColumnSpacing="0"
@@ -17,8 +17,12 @@
 
             <VerticalStackLayout Grid.Row="0"
                          Spacing="12">
-                <ImageButton Source="https://images.squarespace-cdn.com/content/v1/618e7f223fb749481d23c9c1/8ad0b113-c63a-4db9-809a-4c3eb51122ba/foto+logo.jpg" HeightRequest="58" WidthRequest="58" />
-                <ImageButton Source="https://images.squarespace-cdn.com/content/v1/618e7f223fb749481d23c9c1/8ad0b113-c63a-4db9-809a-4c3eb51122ba/foto+logo.jpg" HeightRequest="58" WidthRequest="58" />
+                <ImageButton Source="https://images.squarespace-cdn.com/content/v1/618e7f223fb749481d23c9c1/8ad0b113-c63a-4db9-809a-4c3eb51122ba/foto+logo.jpg"
+                             HeightRequest="58"
+                             WidthRequest="58" />
+                <ImageButton Source="https://images.squarespace-cdn.com/content/v1/618e7f223fb749481d23c9c1/8ad0b113-c63a-4db9-809a-4c3eb51122ba/foto+logo.jpg"
+                             HeightRequest="58"
+                             WidthRequest="58" />
             </VerticalStackLayout>
 
             <BoxView Grid.Row="1"
@@ -33,32 +37,34 @@
         </Grid>
 
         <Grid
-                Grid.Column="1"
-                RowDefinitions="Auto, *, Auto"
-                BackgroundColor="{AppThemeBinding Light=White, Dark=#0c0c0c}"
-                Padding="20">
+            Grid.Column="1"
+            RowDefinitions="Auto, *, Auto"
+            BackgroundColor="{AppThemeBinding Light=White, Dark=#0c0c0c}"
+            Padding="20">
+
             <VerticalStackLayout
                 Padding="20"
                 Spacing="15">
-            <Border
-                Grid.Row="0"
-                BackgroundColor="White" 
-                HeightRequest="180" 
-                WidthRequest="180"
-                HorizontalOptions="Center"
-                Padding="0">
-                <Image Source="https://images.squarespace-cdn.com/content/v1/618e7f223fb749481d23c9c1/8ad0b113-c63a-4db9-809a-4c3eb51122ba/foto+logo.jpg"/>
-            </Border>
+
+                <Border
+                    Grid.Row="0"
+                    BackgroundColor="White" 
+                    HeightRequest="180" 
+                    WidthRequest="180"
+                    HorizontalOptions="Center"
+                    Padding="0">
+                    <Image Source="https://images.squarespace-cdn.com/content/v1/618e7f223fb749481d23c9c1/8ad0b113-c63a-4db9-809a-4c3eb51122ba/foto+logo.jpg"/>
+                </Border>
 
 
-            <HorizontalStackLayout Spacing="12">
-                <Button Text="zapisz" HorizontalOptions="Start" WidthRequest="120"/>
-                <Switch IsToggled="True" />
-            </HorizontalStackLayout>
+                <HorizontalStackLayout Spacing="12">
+                    <Button Text="zapisz" HorizontalOptions="Start" WidthRequest="120"/>
+                    <Switch IsToggled="True" />
+                </HorizontalStackLayout>
 
-            <Entry Placeholder="Entry Label Zapisu"/>
+                <Entry Placeholder="Entry Label Zapisu"/>
 
-            <Button Text="przywróć zaznaczony" HorizontalOptions="Start"/>
+                <Button Text="przywróć zaznaczony" HorizontalOptions="Start"/>
 
             </VerticalStackLayout>
 
@@ -73,30 +79,30 @@
             <Grid BackgroundColor="{AppThemeBinding Light=White, Dark=#0f0f0f}" 
                   Padding="15,10"
                   ColumnDefinitions="*, *, *, *, *">
-                <Label Text="Label" Grid.Column="0" FontAttributes="Bold" HorizontalOptions="Center" TextColor="{AppThemeBinding Light=Black, Dark=White}"/>
+                
+                <Label Text="Description" Grid.Column="0" FontAttributes="Bold" HorizontalOptions="Center" TextColor="{AppThemeBinding Light=Black, Dark=White}"/>
                 <Label Text="Gra" Grid.Column="1" FontAttributes="Bold" HorizontalOptions="Center" TextColor="{AppThemeBinding Light=Black, Dark=White}"/>
                 <Label Text="Data" Grid.Column="2" FontAttributes="Bold" HorizontalOptions="Center" TextColor="{AppThemeBinding Light=Black, Dark=White}"/>
-                    <Label Text="Czas" Grid.Column="3" FontAttributes="Bold" HorizontalOptions="Center" TextColor="{AppThemeBinding Light=Black, Dark=White}"/>
+                <Label Text="Czas" Grid.Column="3" FontAttributes="Bold" HorizontalOptions="Center" TextColor="{AppThemeBinding Light=Black, Dark=White}"/>
                 <Label Text="Rozmiar" Grid.Column="4" FontAttributes="Bold" HorizontalOptions="Center" TextColor="{AppThemeBinding Light=Black, Dark=White}"/>
-                </Grid>
+            </Grid>
 
-                <ScrollView>
-                <VerticalStackLayout Padding="10" Spacing="8">
+            <ScrollView>
+                <VerticalStackLayout Padding="10" Spacing="8" x:Name="SavesContainer">
                     <Border BackgroundColor="{AppThemeBinding Light=White, Dark=#0f0f0f}">
-                            <Grid ColumnDefinitions="*, *, *, *, *">
+                        <Grid ColumnDefinitions="*, *, *, *, *">
                             <Label Text="Wyginam Śmiało ciało, dla mnie to mało (wgl aktualnie leci mi arabski metal)" Grid.Column="0" TextColor="{AppThemeBinding Light=Black, Dark=White}" HorizontalOptions="Center"/>
                             <Label Text="Deltarune" Grid.Column="1" TextColor="{AppThemeBinding Light=Black, Dark=White}" HorizontalOptions="Center"/>
                             <Label Text="12.04.2026" Grid.Column="2" HorizontalOptions="Center" TextColor="{AppThemeBinding Light=Black, Dark=White}"/>
                             <Label Text="00:00" Grid.Column="3" HorizontalOptions="Center" TextColor="{AppThemeBinding Light=Black, Dark=White}"/>
-                                <Label Text="0 MB" Grid.Column="4" HorizontalOptions="Center" TextColor="{AppThemeBinding Light=Black, Dark=White}"/>
-                            </Grid>
-                        </Border>
+                            <Label Text="0 MB" Grid.Column="4" HorizontalOptions="Center" TextColor="{AppThemeBinding Light=Black, Dark=White}"/>
+                        </Grid>
+                    </Border>
+                </VerticalStackLayout>
+            </ScrollView>
 
-                    </VerticalStackLayout>
-                </ScrollView>
+        </VerticalStackLayout>
 
-            </VerticalStackLayout>
+    </Grid>
 
-        </Grid>
-
-    </ContentPage>
+</ContentPage>

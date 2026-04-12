@@ -1,8 +1,4 @@
-﻿using System;
-using System.Collections.Generic;
-using System.Text;
-
-namespace MauiApp1.Scripts
+﻿namespace MauiApp1.Scripts
 {
     public static class AppScript
     {

@@ -1,6 +1,4 @@
-﻿using MauiApp1.Scripts;
-
-namespace MauiApp1
+﻿namespace MauiApp1
 {
     public partial class MainPage : ContentPage
     {
