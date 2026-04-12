@@ -3,62 +3,91 @@
              xmlns:x="http://schemas.microsoft.com/winfx/2009/xaml"
              x:Class="MauiApp1.MainPage"
              >
-    
-    <Grid ColumnDefinitions="100, *, 900"
+
+    <Grid ColumnDefinitions="84, *, 900"
           RowDefinitions="*, Auto"
           ColumnSpacing="0"
           RowSpacing="0">
 
         <Grid Grid.Column="0"
-              BackgroundColor="{AppThemeBinding Light=White, Dark=#0f0f0f}"
-              Padding="12"
-              RowDefinitions="Auto, *, Auto"
+              BackgroundColor="{AppThemeBinding Light=#fafafa, Dark=#0f0f0f}"
+              RowDefinitions="*, 66"
                 RowSpacing="12">
 
-            <VerticalStackLayout Grid.Row="0"
-                         Spacing="12">
-                <ImageButton Source="https://images.squarespace-cdn.com/content/v1/618e7f223fb749481d23c9c1/8ad0b113-c63a-4db9-809a-4c3eb51122ba/foto+logo.jpg" HeightRequest="58" WidthRequest="58" />
-                <ImageButton Source="https://images.squarespace-cdn.com/content/v1/618e7f223fb749481d23c9c1/8ad0b113-c63a-4db9-809a-4c3eb51122ba/foto+logo.jpg" HeightRequest="58" WidthRequest="58" />
-            </VerticalStackLayout>
+            <CollectionView
+                Grid.Row="0"
+                SelectionMode="Single"
+                x:Name="AppCollectionView"
+                >
+                <CollectionView.ItemTemplate>
+                    <DataTemplate>
+                        <StackLayout HeightRequest="70" Padding="0,5,0,0">
+                            <Border VerticalOptions="Center" Stroke="{AppThemeBinding Light=Black, Dark=White}" StrokeShape="RoundRectangle 10" HeightRequest="60" WidthRequest="60">
+                                <ImageButton
+                                        Aspect="AspectFit"
+                                        HeightRequest="58" 
+                                        WidthRequest="58"
+                                        >
+                                    <ImageButton.Source>
+                                        <FontImageSource
+                                                FontFamily="MaterialIcons"
+                                                Glyph="&#xea0b;"
+                                                Color="{AppThemeBinding Light=Black, Dark=White}"
+                                                Size="24" />
+                                    </ImageButton.Source>
+                                </ImageButton>
+                            </Border>
+                        </StackLayout>
+                    </DataTemplate>
+                </CollectionView.ItemTemplate>
+            </CollectionView>
 
-            <BoxView Grid.Row="1"
-                     BackgroundColor="{AppThemeBinding Light=White, Dark=#0f0f0f}"/>
-
-            <ImageButton Grid.Row="2"
-                 Source="https://images.squarespace-cdn.com/content/v1/618e7f223fb749481d23c9c1/8ad0b113-c63a-4db9-809a-4c3eb51122ba/foto+logo.jpg"
-                 HeightRequest="58" 
-                 WidthRequest="58"
-                 HorizontalOptions="End" />
+            <Border Grid.Row="1" Stroke="{AppThemeBinding Light=Black, Dark=White}" StrokeShape="RoundRectangle 10" HeightRequest="62" WidthRequest="62">
+                <ImageButton
+                    Aspect="AspectFit"
+                    HeightRequest="58" 
+                    WidthRequest="58"
+                    Clicked="AddApp_Clicked"
+                    >
+                    <ImageButton.Source>
+                        <FontImageSource
+                            FontFamily="MaterialIcons"
+                            Glyph="&#xe145;"
+                            Color="{AppThemeBinding Light=Black, Dark=White}"
+                            Size="24" />
+                    </ImageButton.Source>
+                </ImageButton>
+            </Border>
 
         </Grid>
 
         <Grid
-                Grid.Column="1"
-                RowDefinitions="Auto, *, Auto"
-                BackgroundColor="{AppThemeBinding Light=White, Dark=#0c0c0c}"
-                Padding="20">
+            Grid.Column="1"
+            RowDefinitions="Auto, *, Auto"
+            BackgroundColor="{AppThemeBinding Light=White, Dark=#0c0c0c}"
+            Padding="20">
             <VerticalStackLayout
                 Padding="20"
                 Spacing="15">
-            <Border
+                <Border
                 Grid.Row="0"
                 BackgroundColor="White" 
                 HeightRequest="180" 
                 WidthRequest="180"
                 HorizontalOptions="Center"
                 Padding="0">
-                <Image Source="https://images.squarespace-cdn.com/content/v1/618e7f223fb749481d23c9c1/8ad0b113-c63a-4db9-809a-4c3eb51122ba/foto+logo.jpg"/>
-            </Border>
+                    <Image Source="https://images.squarespace-cdn.com/content/v1/618e7f223fb749481d23c9c1/8ad0b113-c63a-4db9-809a-4c3eb51122ba/foto+logo.jpg"/>
+                </Border>
 
 
-            <HorizontalStackLayout Spacing="12">
-                <Button Text="zapisz" HorizontalOptions="Start" WidthRequest="120"/>
-                <Switch IsToggled="True" />
-            </HorizontalStackLayout>
+                <HorizontalStackLayout Spacing="12">
+                    <Button Text="zapisz" HorizontalOptions="Start" WidthRequest="120"/>
+                    <Switch IsToggled="True" />
+                </HorizontalStackLayout>
 
-            <Entry Placeholder="Entry Label Zapisu"/>
+                <Entry Placeholder="Entry Label Zapisu"/>
 
-            <Button Text="przywróć zaznaczony" HorizontalOptions="Start"/>
+                <Button Text="przywróć zaznaczony" HorizontalOptions="Start"/>
 
             </VerticalStackLayout>
 
@@ -76,27 +105,27 @@
                 <Label Text="Label" Grid.Column="0" FontAttributes="Bold" HorizontalOptions="Center" TextColor="{AppThemeBinding Light=Black, Dark=White}"/>
                 <Label Text="Gra" Grid.Column="1" FontAttributes="Bold" HorizontalOptions="Center" TextColor="{AppThemeBinding Light=Black, Dark=White}"/>
                 <Label Text="Data" Grid.Column="2" FontAttributes="Bold" HorizontalOptions="Center" TextColor="{AppThemeBinding Light=Black, Dark=White}"/>
-                    <Label Text="Czas" Grid.Column="3" FontAttributes="Bold" HorizontalOptions="Center" TextColor="{AppThemeBinding Light=Black, Dark=White}"/>
+                <Label Text="Czas" Grid.Column="3" FontAttributes="Bold" HorizontalOptions="Center" TextColor="{AppThemeBinding Light=Black, Dark=White}"/>
                 <Label Text="Rozmiar" Grid.Column="4" FontAttributes="Bold" HorizontalOptions="Center" TextColor="{AppThemeBinding Light=Black, Dark=White}"/>
-                </Grid>
+            </Grid>
 
-                <ScrollView>
+            <ScrollView>
                 <VerticalStackLayout Padding="10" Spacing="8">
                     <Border BackgroundColor="{AppThemeBinding Light=White, Dark=#0f0f0f}">
-                            <Grid ColumnDefinitions="*, *, *, *, *">
+                        <Grid ColumnDefinitions="*, *, *, *, *">
                             <Label Text="Wyginam Śmiało ciało, dla mnie to mało (wgl aktualnie leci mi arabski metal)" Grid.Column="0" TextColor="{AppThemeBinding Light=Black, Dark=White}" HorizontalOptions="Center"/>
                             <Label Text="Deltarune" Grid.Column="1" TextColor="{AppThemeBinding Light=Black, Dark=White}" HorizontalOptions="Center"/>
                             <Label Text="12.04.2026" Grid.Column="2" HorizontalOptions="Center" TextColor="{AppThemeBinding Light=Black, Dark=White}"/>
                             <Label Text="00:00" Grid.Column="3" HorizontalOptions="Center" TextColor="{AppThemeBinding Light=Black, Dark=White}"/>
-                                <Label Text="0 MB" Grid.Column="4" HorizontalOptions="Center" TextColor="{AppThemeBinding Light=Black, Dark=White}"/>
-                            </Grid>
-                        </Border>
+                            <Label Text="0 MB" Grid.Column="4" HorizontalOptions="Center" TextColor="{AppThemeBinding Light=Black, Dark=White}"/>
+                        </Grid>
+                    </Border>
 
-                    </VerticalStackLayout>
-                </ScrollView>
+                </VerticalStackLayout>
+            </ScrollView>
 
-            </VerticalStackLayout>
+        </VerticalStackLayout>
 
-        </Grid>
+    </Grid>
 
-    </ContentPage>
+</ContentPage>
