@@ -1,33 +1,47 @@
 ﻿<?xml version="1.0" encoding="utf-8" ?>
 <ContentPage xmlns="http://schemas.microsoft.com/dotnet/2021/maui"
              xmlns:x="http://schemas.microsoft.com/winfx/2009/xaml"
-             x:Class="MauiApp1.MainPage">
+             x:Class="MauiApp1.MainPage"
+             >
     
-    <Grid ColumnDefinitions="100, *, 900" 
+    <Grid ColumnDefinitions="100, *, 900"
           RowDefinitions="*, Auto"
           ColumnSpacing="0"
           RowSpacing="0">
 
-        <VerticalStackLayout Grid.Column="0"
-                             BackgroundColor="#F8F8F8"
-                             Padding="12"
-                             Spacing="12">
+        <Grid Grid.Column="0"
+              BackgroundColor="{AppThemeBinding Light=White, Dark=#0f0f0f}"
+              Padding="12"
+              RowDefinitions="Auto, *, Auto"
+                RowSpacing="12">
 
-            <ImageButton Source="https://images.squarespace-cdn.com/content/v1/618e7f223fb749481d23c9c1/8ad0b113-c63a-4db9-809a-4c3eb51122ba/foto+logo.jpg" HeightRequest="58" WidthRequest="58"  />
-            <ImageButton Source="https://images.squarespace-cdn.com/content/v1/618e7f223fb749481d23c9c1/8ad0b113-c63a-4db9-809a-4c3eb51122ba/foto+logo.jpg" HeightRequest="58" WidthRequest="58"  />
+            <VerticalStackLayout Grid.Row="0"
+                         Spacing="12">
+                <ImageButton Source="https://images.squarespace-cdn.com/content/v1/618e7f223fb749481d23c9c1/8ad0b113-c63a-4db9-809a-4c3eb51122ba/foto+logo.jpg" HeightRequest="58" WidthRequest="58" />
+                <ImageButton Source="https://images.squarespace-cdn.com/content/v1/618e7f223fb749481d23c9c1/8ad0b113-c63a-4db9-809a-4c3eb51122ba/foto+logo.jpg" HeightRequest="58" WidthRequest="58" />
+            </VerticalStackLayout>
 
+            <BoxView Grid.Row="1"
+                     BackgroundColor="{AppThemeBinding Light=White, Dark=#0f0f0f}"/>
 
-            <ImageButton Source="https://images.squarespace-cdn.com/content/v1/618e7f223fb749481d23c9c1/8ad0b113-c63a-4db9-809a-4c3eb51122ba/foto+logo.jpg" HeightRequest="58" WidthRequest="58"  VerticalOptions="End"/>
+            <ImageButton Grid.Row="2"
+                 Source="https://images.squarespace-cdn.com/content/v1/618e7f223fb749481d23c9c1/8ad0b113-c63a-4db9-809a-4c3eb51122ba/foto+logo.jpg"
+                 HeightRequest="58" 
+                 WidthRequest="58"
+                 HorizontalOptions="End" />
 
+        </Grid>
 
-        </VerticalStackLayout>
-
-            <VerticalStackLayout Grid.Column="1"
-                             BackgroundColor="White"
-                             Padding="20"
-                             Spacing="15">
-
-            <Border 
+        <Grid
+                Grid.Column="1"
+                RowDefinitions="Auto, *, Auto"
+                BackgroundColor="{AppThemeBinding Light=White, Dark=#0c0c0c}"
+                Padding="20">
+            <VerticalStackLayout
+                Padding="20"
+                Spacing="15">
+            <Border
+                Grid.Row="0"
                 BackgroundColor="White" 
                 HeightRequest="180" 
                 WidthRequest="180"
@@ -39,40 +53,42 @@
 
             <HorizontalStackLayout Spacing="12">
                 <Button Text="zapisz" HorizontalOptions="Start" WidthRequest="120"/>
-                <Switch IsToggled="True" BackgroundColor="Red" />
+                <Switch IsToggled="True" />
             </HorizontalStackLayout>
 
-            <Entry Placeholder="Entry Labelki Zapisu"/>
+            <Entry Placeholder="Entry Label Zapisu"/>
 
             <Button Text="przywróć zaznaczony" HorizontalOptions="Start"/>
 
+            </VerticalStackLayout>
 
-            <ImageButton Source="https://images.squarespace-cdn.com/content/v1/618e7f223fb749481d23c9c1/8ad0b113-c63a-4db9-809a-4c3eb51122ba/foto+logo.jpg" HeightRequest="58" WidthRequest="58"  VerticalOptions="End" HorizontalOptions="End"/>
+            <ImageButton
+                Grid.Row="1"
+                Source="https://images.squarespace-cdn.com/content/v1/618e7f223fb749481d23c9c1/8ad0b113-c63a-4db9-809a-4c3eb51122ba/foto+logo.jpg" HeightRequest="58" WidthRequest="58"  VerticalOptions="End" HorizontalOptions="End"/>
+        </Grid>
 
-        </VerticalStackLayout>
+        <VerticalStackLayout Grid.Column="2"
+                             BackgroundColor="{AppThemeBinding Light=White, Dark=#0f0f0f}">
 
-            <VerticalStackLayout Grid.Column="2"
-                             BackgroundColor="#F9F9F9">
-
-            <Grid BackgroundColor="#F0F0F0" 
+            <Grid BackgroundColor="{AppThemeBinding Light=White, Dark=#0f0f0f}" 
                   Padding="15,10"
                   ColumnDefinitions="*, *, *, *, *">
-                <Label Text="Label" Grid.Column="0" FontAttributes="Bold" HorizontalOptions="Center" TextColor="Black"/>
-                <Label Text="Gra" Grid.Column="1" FontAttributes="Bold" HorizontalOptions="Center" TextColor="Black" />
-                <Label Text="Data" Grid.Column="2" FontAttributes="Bold" HorizontalOptions="Center" TextColor="Black"/>
-                <Label Text="Czas" Grid.Column="3" FontAttributes="Bold" HorizontalOptions="Center" TextColor="Black"/>
-                <Label Text="Rozmiar" Grid.Column="4" FontAttributes="Bold" HorizontalOptions="End" TextColor="Black"/>
+                <Label Text="Label" Grid.Column="0" FontAttributes="Bold" HorizontalOptions="Center" TextColor="{AppThemeBinding Light=Black, Dark=White}"/>
+                <Label Text="Gra" Grid.Column="1" FontAttributes="Bold" HorizontalOptions="Center" TextColor="{AppThemeBinding Light=Black, Dark=White}"/>
+                <Label Text="Data" Grid.Column="2" FontAttributes="Bold" HorizontalOptions="Center" TextColor="{AppThemeBinding Light=Black, Dark=White}"/>
+                    <Label Text="Czas" Grid.Column="3" FontAttributes="Bold" HorizontalOptions="Center" TextColor="{AppThemeBinding Light=Black, Dark=White}"/>
+                <Label Text="Rozmiar" Grid.Column="4" FontAttributes="Bold" HorizontalOptions="Center" TextColor="{AppThemeBinding Light=Black, Dark=White}"/>
                 </Grid>
 
                 <ScrollView>
                 <VerticalStackLayout Padding="10" Spacing="8">
-                    <Border Stroke="#E0E0E0" StrokeThickness="1" BackgroundColor="White" Padding="12">
+                    <Border BackgroundColor="{AppThemeBinding Light=White, Dark=#0f0f0f}">
                             <Grid ColumnDefinitions="*, *, *, *, *">
-                            <Label Text="Wyginam Śmiało ciało, dla mnie to mało (wgl aktualnie leci mi arabski metal)" Grid.Column="0" TextColor="Black" HorizontalOptions="Center"/>
-                            <Label Text="Deltarune" Grid.Column="1" TextColor="Black" HorizontalOptions="Center"/>
-                                <Label Text="12.04.2026" Grid.Column="2" HorizontalOptions="Center" TextColor="Black"/>
-                                <Label Text="00:00" Grid.Column="3" HorizontalOptions="Center" TextColor="Black"/>
-                                <Label Text="0 MB" Grid.Column="4" HorizontalOptions="End" TextColor="Black"/>
+                            <Label Text="Wyginam Śmiało ciało, dla mnie to mało (wgl aktualnie leci mi arabski metal)" Grid.Column="0" TextColor="{AppThemeBinding Light=Black, Dark=White}" HorizontalOptions="Center"/>
+                            <Label Text="Deltarune" Grid.Column="1" TextColor="{AppThemeBinding Light=Black, Dark=White}" HorizontalOptions="Center"/>
+                            <Label Text="12.04.2026" Grid.Column="2" HorizontalOptions="Center" TextColor="{AppThemeBinding Light=Black, Dark=White}"/>
+                            <Label Text="00:00" Grid.Column="3" HorizontalOptions="Center" TextColor="{AppThemeBinding Light=Black, Dark=White}"/>
+                                <Label Text="0 MB" Grid.Column="4" HorizontalOptions="Center" TextColor="{AppThemeBinding Light=Black, Dark=White}"/>
                             </Grid>
                         </Border>
 
