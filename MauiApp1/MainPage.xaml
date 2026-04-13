@@ -49,17 +49,20 @@
                 <Border
                     Grid.Row="0"
                     BackgroundColor="White" 
-                    HeightRequest="180" 
-                    WidthRequest="180"
+                    HeightRequest="300" 
+                    WidthRequest="200"
                     HorizontalOptions="Center"
                     Padding="0">
-                    <Image Source="https://images.squarespace-cdn.com/content/v1/618e7f223fb749481d23c9c1/8ad0b113-c63a-4db9-809a-4c3eb51122ba/foto+logo.jpg"/>
+                    <Image
+                        x:Name="myImage"
+                        Aspect="AspectFill"
+                        Source="https://images.squarespace-cdn.com/content/v1/618e7f223fb749481d23c9c1/8ad0b113-c63a-4db9-809a-4c3eb51122ba/foto+logo.jpg"/>
                 </Border>
 
 
                 <HorizontalStackLayout Spacing="12">
                     <Button Text="zapisz" HorizontalOptions="Start" WidthRequest="120"/>
-                    <Switch IsToggled="True" />
+                    <Switch IsToggled="True" Background="red"  />
                 </HorizontalStackLayout>
 
                 <Entry Placeholder="Entry Label Zapisu"/>
