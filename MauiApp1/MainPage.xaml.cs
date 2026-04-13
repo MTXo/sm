@@ -79,15 +79,16 @@ namespace MauiApp1
 
             PopupOverlay.IsVisible = false;
 
-            
+            gameBanner.Source = await HTMLConnection.GetImageSourceAsync(current.SteamAppId.ToString());
         }
 
-        private void AppCollectionView_SelectionChanged(object sender, SelectionChangedEventArgs e)
+        private async void AppCollectionView_SelectionChanged(object sender, SelectionChangedEventArgs e)
         {
             if (e.CurrentSelection.Count > 0)
             {
                 current = (Scripts.AppInfo)e.CurrentSelection[0];
                 DetailsGrid.IsVisible = true;
+                gameBanner.Source = await HTMLConnection.GetImageSourceAsync(current.SteamAppId.ToString()); // pobieranie zdjęcia do baneru
             }
 
         }
