@@ -1,9 +1,5 @@
-﻿using System;
-using System.Collections.Generic;
-using System.Globalization;
-using System.IO;
+﻿using System.Globalization;
 using System.IO.Compression;
-using System.Text;
 
 namespace MauiApp1.Scripts
 {
@@ -13,8 +9,9 @@ namespace MauiApp1.Scripts
         public string FileName { get; set; }
 
         public DateTime Timestamp { get; set; }
-        public string Name1 { get; set; }
-        public string Name2 { get; set; }
+        public string GameName { get; set; }
+        public string Description { get; set; }
+        public long FileSize { get; set; }
     }
     class Backuper
     {
@@ -110,14 +107,16 @@ namespace MauiApp1.Scripts
                     // name1 i name2 (mogą mieć underscore, więc składamy resztę)
                     string name1 = parts[2];
                     string name2 = string.Join("_", parts.Skip(3));
+                    long fileSize = new FileInfo(file).Length;
 
                     result.Add(new ZipArchiveInfo
                     {
                         FullPath = file,
                         FileName = Path.GetFileName(file),
                         Timestamp = timestamp,
-                        Name1 = name1,
-                        Name2 = name2
+                        GameName = name1,
+                        Description = name2,
+                        FileSize = fileSize
                     });
                 }
                 catch
