@@ -156,6 +156,10 @@
                         <Label Text="Ścieżka pliku wykonywalnego: " VerticalOptions="Center"/>
                         <Entry x:Name="exePathEntry" Placeholder="Ścieżka pliku..." Unfocused="exePathEntry_Unfocused" HorizontalOptions="Fill"/>
                     </VerticalStackLayout>
+                    <VerticalStackLayout Spacing="5">
+                        <Label Text="Steam App ID: " VerticalOptions="Center"/>
+                        <Entry x:Name="steamAID" Placeholder="Steam APP ID..." Unfocused="steamAIDEntry_Unfocused" HorizontalOptions="Fill"/>
+                    </VerticalStackLayout>
                     <HorizontalStackLayout>
                         <Grid RowDefinitions="*" ColumnDefinitions="5, 60, 620, 60, 5">
                         <ImageButton Grid.Column="1"
