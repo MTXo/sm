@@ -23,6 +23,37 @@ namespace MauiApp1.Scripts
                 return false;
             }
         }
+        public static string? GetProcessPath(string exeName)
+        {
+            if (!OperatingSystem.IsWindows())
+                return null;
+
+            string processName = Path.GetFileNameWithoutExtension(exeName);
+
+            var processes = Process.GetProcessesByName(processName);
+
+            foreach (var process in processes)
+            {
+                try
+                {
+                    if (process.MainModule == null)
+                        continue;
+
+                    string path = process.MainModule.FileName;
+
+                    if (string.IsNullOrWhiteSpace(path))
+                        continue;
+
+                    return path;
+                }
+                catch
+                {
+                    // brak uprawnień do procesu, ignorujemy
+                }
+            }
+
+            return null;
+        }
         public static List<string> GetUserProcesses()
         {
             var result = new List<string>();
@@ -42,7 +73,7 @@ namespace MauiApp1.Scripts
                         continue;
                     string exePath = process.MainModule.FileName;
 
-                    // filtr 1: katalog Windows → systemowy
+                    // filtr 1: katalog Windows, systemowy
                     if (exePath.StartsWith(
                             Environment.GetFolderPath(Environment.SpecialFolder.Windows),
                             StringComparison.OrdinalIgnoreCase))
