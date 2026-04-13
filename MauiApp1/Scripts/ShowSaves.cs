@@ -9,15 +9,17 @@ namespace MauiApp1.Scripts
     {
         public List<ZipArchiveInfo> GetFormattedSaves(string folderPath)
         {
-            var saves = Backuper.GetArchives(folderPath);
-            List<ZipArchiveInfo> sortedSaves = new List<ZipArchiveInfo>(saves);
+            var saves = Backuper.GetArchives(folderPath); // pobieranie listy zapisów z folderu
+            List<ZipArchiveInfo> savesList = new List<ZipArchiveInfo>(saves); // tworzenie listy zapisów do wyświetlenia
 
+            // sprawdzanie czy nie będzie problemu z brakiem zapisów
             if (saves.Count == 0)
             {
                 Console.WriteLine("Brak zapisów.");
-                return sortedSaves;
+                return savesList;
             }
 
+            // dla każdego zapisu tworzenie elementu UI do wyświetlenia informacji o zapisie
             foreach (var save in saves)
             {
                 var saveLabels = new Border
@@ -27,20 +29,21 @@ namespace MauiApp1.Scripts
                     Margin = new Thickness(5),
                     Content = CreateSaveGrid(save)
                 };
-                sortedSaves.Add(save);
+                savesList.Add(save);
             }
 
-            return sortedSaves;
+            return savesList;
         }
 
         private Grid CreateSaveGrid(ZipArchiveInfo save)
         {
-            string date = save.Timestamp.ToString("dd.MM.yyyy") ?? "—";
-            string time = save.Timestamp.ToString("HH:mm:ss") ?? "—";
-            string fileSize = FormatFileSize(save.FileSize);
+            string date = save.Timestamp.ToString("dd.MM.yyyy") ?? "—"; // data
+            string time = save.Timestamp.ToString("HH:mm:ss") ?? "—"; // godzina
+            string fileSize = FormatFileSize(save.FileSize); // rozmiar który jest formatowany do czytelnej formy (B, KB, MB, GB)
 
             var grid = new Grid
             {
+                // definiowanie układu siatki z 5 kolumnami o równych szerokościach
                 ColumnDefinitions =
                 {
                     new ColumnDefinition { Width = GridLength.Star },
@@ -50,11 +53,13 @@ namespace MauiApp1.Scripts
                     new ColumnDefinition { Width = GridLength.Star },
                 },
             };
+            // tworzenie etykiet dla opisu, nazwy pliku, daty, czasu i rozmiaru pliku
             var descLabel = CreateLabel($"{save.Description}");
             var nameLabel = CreateLabel($"{save.FileName}");
             var dateLabel = CreateLabel($"{date}");
             var timeLabel = CreateLabel($"{time}");
             var fileSizeLabel = CreateLabel($"{fileSize}");
+            // dodawanie etykiet do siatki w odpowiednich kolumnach
             grid.Add(descLabel, 0, 0);
             grid.Add(nameLabel, 0, 1);
             grid.Add(dateLabel, 0, 2);
