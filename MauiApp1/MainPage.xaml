@@ -10,7 +10,7 @@
               RowSpacing="5">
             <Grid Grid.Column="0"
                   BackgroundColor="{AppThemeBinding Dark=#ffffff, Light=#2f2f2f}"
-                  RowDefinitions="*, 82"
+                  RowDefinitions="*, 82, 82"
                     RowSpacing="6">
                 <Border Margin="0, 5, 0, 0" Grid.Row="0" BackgroundColor="{AppThemeBinding Light=#ffffff, Dark=#2f2f2f}" Stroke="{AppThemeBinding Light=Black, Dark=White}" StrokeShape="RoundRectangle 10" WidthRequest="80">
                     <CollectionView
@@ -52,6 +52,23 @@
                                     Color="{AppThemeBinding Light=Black, Dark=White}"
                                     Size="24" />
                         </ImageButton.Source>
+                    </ImageButton>
+                </Border>
+                <Border Grid.Row="2" BackgroundColor="{AppThemeBinding Light=#ffffff, Dark=#2f2f2f}" Stroke="{AppThemeBinding Light=Black, Dark=White}" StrokeShape="RoundRectangle 10" HeightRequest="80" WidthRequest="80">
+                    <ImageButton
+                        Aspect="AspectFit"
+                        HeightRequest="65" 
+                        WidthRequest="65"
+                        Clicked="AddApp_Clicked"
+                        BackgroundColor="{AppThemeBinding Light=#ffffff, Dark=#2f2f2f}"
+                        >
+                        <ImageButton.Source>
+                            <FontImageSource
+                                FontFamily="MaterialIcons"
+                                Glyph="&#xf522;"
+                                Color="{AppThemeBinding Light=Black, Dark=White}"
+                                Size="24" />
+                            </ImageButton.Source>
                     </ImageButton>
                 </Border>
             </Grid>
