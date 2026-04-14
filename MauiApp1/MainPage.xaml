@@ -3,16 +3,16 @@
              xmlns:x="http://schemas.microsoft.com/winfx/2009/xaml"
              x:Class="MauiApp1.MainPage"
              >
-    <Grid BackgroundColor="{AppThemeBinding Dark=#aaaaaa, Light=#2f2f2f}">
+    <Grid BackgroundColor="{AppThemeBinding Dark=#ffffff, Light=#2f2f2f}">
         <Grid ColumnDefinitions="86, *, 900"
               RowDefinitions="*, Auto"
               ColumnSpacing="0"
               RowSpacing="5">
             <Grid Grid.Column="0"
-                  BackgroundColor="{AppThemeBinding Dark=#aaaaaa, Light=#2f2f2f}"
+                  BackgroundColor="{AppThemeBinding Dark=#ffffff, Light=#2f2f2f}"
                   RowDefinitions="*, 82"
                     RowSpacing="6">
-                <Border Margin="0, 5, 0, 0" Grid.Row="0" BackgroundColor="{AppThemeBinding Light=#aaaaaa, Dark=#2f2f2f}" Stroke="{AppThemeBinding Light=Black, Dark=White}" StrokeShape="RoundRectangle 10" WidthRequest="80">
+                <Border Margin="0, 5, 0, 0" Grid.Row="0" BackgroundColor="{AppThemeBinding Light=#ffffff, Dark=#2f2f2f}" Stroke="{AppThemeBinding Light=Black, Dark=White}" StrokeShape="RoundRectangle 10" WidthRequest="80">
                     <CollectionView
                         SelectionMode="Single"
                         x:Name="AppCollectionView"
@@ -37,13 +37,13 @@
                         </CollectionView.ItemTemplate>
                     </CollectionView>
                 </Border>
-                <Border Grid.Row="1" BackgroundColor="{AppThemeBinding Light=#aaaaaa, Dark=#2f2f2f}" Stroke="{AppThemeBinding Light=Black, Dark=White}" StrokeShape="RoundRectangle 10" HeightRequest="80" WidthRequest="80">
+                <Border Grid.Row="1" BackgroundColor="{AppThemeBinding Light=#ffffff, Dark=#2f2f2f}" Stroke="{AppThemeBinding Light=Black, Dark=White}" StrokeShape="RoundRectangle 10" HeightRequest="80" WidthRequest="80">
                     <ImageButton
                             Aspect="AspectFit"
                             HeightRequest="65" 
                             WidthRequest="65"
                             Clicked="AddApp_Clicked"
-                            BackgroundColor="{AppThemeBinding Light=#aaaaaa, Dark=#2f2f2f}"
+                            BackgroundColor="{AppThemeBinding Light=#ffffff, Dark=#2f2f2f}"
                             >
                         <ImageButton.Source>
                             <FontImageSource
@@ -55,7 +55,7 @@
                     </ImageButton>
                 </Border>
             </Grid>
-            <Border Margin="0,5,0,0" Grid.Column="1" BackgroundColor="{AppThemeBinding Light=#aaaaaa, Dark=#2f2f2f}" Stroke="{AppThemeBinding Light=Black, Dark=White}" StrokeShape="RoundRectangle 10">
+            <Border Margin="0,5,0,0" Grid.Column="1" BackgroundColor="{AppThemeBinding Light=#ffffff, Dark=#2f2f2f}" Stroke="{AppThemeBinding Light=Black, Dark=White}" StrokeShape="RoundRectangle 10">
                 <Grid
                 RowDefinitions="Auto, *, Auto"
                 BackgroundColor="{AppThemeBinding Light=White, Dark=#0c0c0c}"
@@ -102,7 +102,7 @@
 
                 </Grid>
             </Border>
-            <Border Grid.Column="2" Margin="0,5,5,0" BackgroundColor="{AppThemeBinding Light=#aaaaaa, Dark=#2f2f2f}" Stroke="{AppThemeBinding Light=Black, Dark=White}" StrokeShape="RoundRectangle 10">
+            <Border Grid.Column="2" Margin="0,5,5,0" BackgroundColor="{AppThemeBinding Light=#ffffff, Dark=#2f2f2f}" Stroke="{AppThemeBinding Light=Black, Dark=White}" StrokeShape="RoundRectangle 10">
                 <VerticalStackLayout>
                     <Grid BackgroundColor="{AppThemeBinding Light=White, Dark=#0f0f0f}" 
                           Padding="15,10"
