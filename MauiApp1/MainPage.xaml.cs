@@ -18,8 +18,6 @@ namespace MauiApp1
         }
         async void OpenPopup_Clicked(object sender, EventArgs e)
         {
-           
-
             steamAID.Text = "";
             exePathEntry.Text = "";
 
@@ -80,6 +78,36 @@ namespace MauiApp1
             PopupOverlay.IsVisible = false;
 
             
+        }
+
+        async void OpenPopupSettings_Clicked(object sender, EventArgs e)
+        { 
+            PopupOverlaySettings.IsVisible = true;
+
+            // stan początkowy
+            PopupOverlaySettings.Opacity = 0;
+
+            PopupContentSettings.Scale = 0.8;
+            PopupContentSettings.Opacity = 0;
+            PopupContentSettings.TranslationY = 50;
+
+            await Task.WhenAll(
+                PopupOverlaySettings.FadeToAsync(1, 200),
+                PopupContentSettings.FadeToAsync(1, 200),
+                PopupContentSettings.ScaleToAsync(1, 250, Easing.CubicOut),
+                PopupContentSettings.TranslateToAsync(0, 0, 250, Easing.CubicOut)
+            );
+        }
+
+        async void ClosePopupSettings_Clicked(object sender, EventArgs e)
+        {
+            await Task.WhenAll(
+                PopupOverlaySettings.FadeToAsync(0, 200),
+                PopupContentSettings.FadeToAsync(0, 150),
+                PopupContentSettings.ScaleToAsync(0.8, 150, Easing.CubicIn),
+                PopupContentSettings.TranslateToAsync(0, 50, 150, Easing.CubicIn)
+            );
+            PopupOverlaySettings.IsVisible = false;
         }
 
         private void AppCollectionView_SelectionChanged(object sender, SelectionChangedEventArgs e)

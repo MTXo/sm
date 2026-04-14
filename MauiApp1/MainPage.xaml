@@ -59,7 +59,7 @@
                         Aspect="AspectFit"
                         HeightRequest="65" 
                         WidthRequest="65"
-                        Clicked="AddApp_Clicked"
+                        Clicked="OpenPopupSettings_Clicked"
                         BackgroundColor="{AppThemeBinding Light=#ffffff, Dark=#2f2f2f}"
                         >
                         <ImageButton.Source>
@@ -201,6 +201,26 @@
                             </ImageButton>
                         </Grid>
                     </HorizontalStackLayout>
+                </VerticalStackLayout>
+            </Border>
+
+        </Grid>
+        <Grid x:Name="PopupOverlaySettings"
+            IsVisible="False"
+            BackgroundColor="#80000000"
+            ZIndex="10">
+                    <Button Clicked="ClosePopupSettings_Clicked" BackgroundColor="Transparent"></Button>
+                    <Border x:Name="PopupContentSettings"
+            StrokeThickness="0"
+            BackgroundColor="{AppThemeBinding Light=White, Dark=Black}"
+            Padding="20"
+            StrokeShape="RoundRectangle 12"
+            HorizontalOptions="Center"
+            VerticalOptions="Center"
+            WidthRequest="800">
+                <VerticalStackLayout Spacing="10" >
+                    <Label Text="Ustawienia" FontSize="20" HorizontalOptions="Center"/>
+                    
                 </VerticalStackLayout>
             </Border>
 
