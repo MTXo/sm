@@ -82,6 +82,8 @@ namespace MauiApp1
 
         async void OpenPopupSettings_Clicked(object sender, EventArgs e)
         { 
+            ClosePopup_Clicked(sender, e);
+
             PopupOverlaySettings.IsVisible = true;
 
             // stan początkowy
