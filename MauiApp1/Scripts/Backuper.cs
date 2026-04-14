@@ -11,7 +11,7 @@ namespace MauiApp1.Scripts
         public DateTime Timestamp { get; set; }
         public string GameName { get; set; }
         public string Description { get; set; }
-        public long FileSize { get; set; }
+        public string FileSize { get; set; }
     }
     class Backuper
     {
@@ -107,7 +107,8 @@ namespace MauiApp1.Scripts
                     // name1 i name2 (mogą mieć underscore, więc składamy resztę)
                     string name1 = parts[2];
                     string name2 = string.Join("_", parts.Skip(3));
-                    long fileSize = new FileInfo(file).Length;
+                    long unFormattedFileSize = new FileInfo(file).Length;
+                    string fileSize = FormatFileSize(unFormattedFileSize);
 
                     result.Add(new ZipArchiveInfo
                     {
@@ -129,6 +130,24 @@ namespace MauiApp1.Scripts
             return result
                 .OrderByDescending(x => x.Timestamp)
                 .ToList();
+        }
+
+
+        private static string FormatFileSize(long bytes)
+        {
+            if (bytes < 1024)
+                return $"{bytes} B";
+
+            double kb = bytes / 1024.0;
+            if (kb < 1024)
+                return $"{kb:F1} KB";
+
+            double mb = kb / 1024.0;
+            if (mb < 1024)
+                return $"{mb:F1} MB";
+
+            double gb = mb / 1024.0;
+            return $"{gb:F2} GB";
         }
     }
 }

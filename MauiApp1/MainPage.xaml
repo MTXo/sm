@@ -135,7 +135,8 @@
                         <CollectionView
                             x:Name="SavesCollectionView"
                             ItemsSource="{Binding Saves}"
-                            SelectionMode="Single">
+                            SelectionMode="Single"
+                            IsVisible="True">
 
                             <CollectionView.ItemTemplate>
                                 

@@ -15,7 +15,7 @@ namespace MauiApp1
             AppCollectionView.ItemsSource = AppScript.apps;
 
             LoadSaves(); // tymczasowe wczytywanie zapisów do wyświetlenia, docelowo będzie to pobieranie z folderu z zapisami i formatowanie ich do listy Saves, która jest powiązana z interfejsem użytkownika (SavesCollectionView)
-
+            
         }
 
         private void LoadSaves() // tymczasowa funkcja do wczytywania przykładowych zapisów, docelowo będzie to pobieranie z folderu z zapisami i formatowanie ich do listy Saves, która jest powiązana z interfejsem użytkownika (SavesCollectionView)
@@ -29,7 +29,7 @@ namespace MauiApp1
                 Timestamp = DateTime.Now,
                 GameName = "Game 1",
                 Description = "Save 1",
-                FileSize = 123456
+                FileSize = "354382"
             });
 
             Saves.Add(new ZipArchiveInfo
@@ -39,7 +39,7 @@ namespace MauiApp1
                 Timestamp = DateTime.Now.AddDays(-1),
                 GameName = "Game 2",
                 Description = "Save 2",
-                FileSize = 654321
+                FileSize = "29555555"
             });
         }
 
