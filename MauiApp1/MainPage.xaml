@@ -3,16 +3,16 @@
              xmlns:x="http://schemas.microsoft.com/winfx/2009/xaml"
              x:Class="MauiApp1.MainPage"
              >
-    <Grid BackgroundColor="{AppThemeBinding Dark=#ffffff, Light=#2f2f2f}">
+    <Grid BackgroundColor="{AppThemeBinding Dark=#ffffff, Light=#dfdfdf}">
         <Grid ColumnDefinitions="86, *, 900"
               RowDefinitions="*, Auto"
-              ColumnSpacing="0"
+              ColumnSpacing="5"
               RowSpacing="5">
             <Grid Grid.Column="0"
-                  BackgroundColor="{AppThemeBinding Dark=#ffffff, Light=#2f2f2f}"
+                  BackgroundColor="{AppThemeBinding Dark=#ffffff, Light=#dfdfdf}"
                   RowDefinitions="*, 82, 82"
                     RowSpacing="6">
-                <Border Margin="0, 5, 0, 0" Grid.Row="0" BackgroundColor="{AppThemeBinding Light=#ffffff, Dark=#2f2f2f}" Stroke="{AppThemeBinding Light=Black, Dark=White}" StrokeShape="RoundRectangle 10" WidthRequest="80">
+                <Border Margin="5, 5, 0, 0" Grid.Row="0" BackgroundColor="{AppThemeBinding Light=#ffffff, Dark=#2f2f2f}" Stroke="{AppThemeBinding Light=Black, Dark=White}" StrokeShape="RoundRectangle 10" WidthRequest="80">
                     <CollectionView
                         SelectionMode="Single"
                         x:Name="AppCollectionView"
@@ -22,7 +22,7 @@
                         >
                         <CollectionView.ItemTemplate>
                             <DataTemplate>
-                                <StackLayout HeightRequest="58" Padding="0,5,0,0">
+                                <StackLayout HeightRequest="56" Padding="0,5,0,0">
                                     <Border VerticalOptions="Center" Stroke="{AppThemeBinding Light=Black, Dark=White}" StrokeShape="RoundRectangle 10" HeightRequest="48" WidthRequest="48">
                                         <Label
                                             Text="{Binding Shortcut}"
@@ -60,7 +60,7 @@
                         Aspect="AspectFit"
                         HeightRequest="65" 
                         WidthRequest="65"
-                        Clicked="AddApp_Clicked"
+                        Clicked="OpenPopupSettings_Clicked"
                         BackgroundColor="{AppThemeBinding Light=#ffffff, Dark=#2f2f2f}"
                         >
                         <ImageButton.Source>
@@ -69,7 +69,7 @@
                                 Glyph="&#xf522;"
                                 Color="{AppThemeBinding Light=Black, Dark=White}"
                                 Size="24" />
-                            </ImageButton.Source>
+                        </ImageButton.Source>
                     </ImageButton>
                 </Border>
             </Grid>
@@ -96,15 +96,18 @@
                                 Source="https://images.squarespace-cdn.com/content/v1/618e7f223fb749481d23c9c1/8ad0b113-c63a-4db9-809a-4c3eb51122ba/foto+logo.jpg"/>
                         </Border>
 
-
-                        <HorizontalStackLayout Spacing="12">
-                            <Button Text="zapisz" HorizontalOptions="Start" WidthRequest="120"/>
-                            <Switch IsToggled="True" />
+                        <!-- ą, ć, ę, ł, ń, ó, ś, ź, ż -->
+                        <HorizontalStackLayout>
+                            <Button Text="Stwórz kopię zapisów" TextColor="{AppThemeBinding Light=Black, Dark=White}" BackgroundColor="{AppThemeBinding Light=#10000000, Dark=#10ffffff}">
+                                <Button.ImageSource>
+                                    <FontImageSource
+                                        FontFamily="MaterialIcons"
+                                        Glyph="&#xe161;"
+                                        Size="24"
+                                        Color="{AppThemeBinding Light=Black, Dark=White}" />
+                                </Button.ImageSource>
+                            </Button>
                         </HorizontalStackLayout>
-
-                        <Entry Placeholder="Entry Label Zapisu"/>
-
-                        <Button Text="przywróć zaznaczony" HorizontalOptions="Start"/>
 
                     </VerticalStackLayout>
 
@@ -204,6 +207,35 @@
                             </ImageButton>
                         </Grid>
                     </HorizontalStackLayout>
+                </VerticalStackLayout>
+            </Border>
+
+        </Grid>
+        <Grid x:Name="PopupOverlaySettings"
+            IsVisible="False"
+            BackgroundColor="#80000000"
+            ZIndex="10">
+            <Button Clicked="ClosePopupSettings_Clicked" BackgroundColor="Transparent"></Button>
+            <Border x:Name="PopupContentSettings"
+            StrokeThickness="0"
+            BackgroundColor="{AppThemeBinding Light=White, Dark=Black}"
+            Padding="20"
+            StrokeShape="RoundRectangle 12"
+            HorizontalOptions="Center"
+            VerticalOptions="Center"
+            WidthRequest="800">
+                <VerticalStackLayout Spacing="10" >
+                    <Label Text="Ustawienia" FontSize="20" HorizontalOptions="Center"/>
+                    <ImageButton Grid.Column="4"
+                        HeightRequest="58" WidthRequest="58" VerticalOptions="End" Clicked="ClosePopupSettings_Clicked" HorizontalOptions="End">
+                        <ImageButton.Source>
+                            <FontImageSource
+                                FontFamily="MaterialIcons"
+                                Glyph="&#xe5cd;"
+                                Color="{AppThemeBinding Light=Black, Dark=White}"
+                                Size="24" />
+                        </ImageButton.Source>
+                    </ImageButton>
                 </VerticalStackLayout>
             </Border>
 
