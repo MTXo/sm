@@ -30,7 +30,8 @@
                                             VerticalOptions="Center"
                                             FontSize="15"
                                             FontAttributes="Bold"
-                                            TextColor="{AppThemeBinding Light=Black, Dark=White}" />
+                                            TextColor="{AppThemeBinding Light=Black, Dark=White}"
+                                            IsVisible="True"/>
                                     </Border>
                                 </StackLayout>
                             </DataTemplate>
@@ -86,11 +87,13 @@
                         <Border
                         Grid.Row="0"
                         BackgroundColor="White" 
-                        HeightRequest="180" 
-                        WidthRequest="180"
+                        HeightRequest="300" 
+                        WidthRequest="200"
                         HorizontalOptions="Center"
                         Padding="0">
-                            <Image Source="https://images.squarespace-cdn.com/content/v1/618e7f223fb749481d23c9c1/8ad0b113-c63a-4db9-809a-4c3eb51122ba/foto+logo.jpg"/>
+                            <Image
+                                x:Name="gameBanner"
+                                Source="https://images.squarespace-cdn.com/content/v1/618e7f223fb749481d23c9c1/8ad0b113-c63a-4db9-809a-4c3eb51122ba/foto+logo.jpg"/>
                         </Border>
 
                         <!-- ą, ć, ę, ł, ń, ó, ś, ź, ż -->

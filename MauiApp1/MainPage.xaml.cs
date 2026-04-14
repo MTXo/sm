@@ -1,4 +1,4 @@
-﻿using MauiApp1.Scripts;
+using MauiApp1.Scripts;
 
 namespace MauiApp1
 {
@@ -77,7 +77,7 @@ namespace MauiApp1
 
             PopupOverlay.IsVisible = false;
 
-            
+            gameBanner.Source = await HTMLConnection.GetImageSourceAsync(current.SteamAppId.ToString());
         }
 
         async void OpenPopupSettings_Clicked(object sender, EventArgs e)
@@ -111,13 +111,14 @@ namespace MauiApp1
             );
             PopupOverlaySettings.IsVisible = false;
         }
-
-        private void AppCollectionView_SelectionChanged(object sender, SelectionChangedEventArgs e)
+        
+        private async void AppCollectionView_SelectionChanged(object sender, SelectionChangedEventArgs e)
         {
             if (e.CurrentSelection.Count > 0)
             {
                 current = (Scripts.AppInfo)e.CurrentSelection[0];
                 DetailsGrid.IsVisible = true;
+                gameBanner.Source = await HTMLConnection.GetImageSourceAsync(current.SteamAppId.ToString()); // pobieranie zdjęcia do baneru
             }
 
         }
