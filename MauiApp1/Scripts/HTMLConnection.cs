@@ -13,13 +13,16 @@ namespace MauiApp1.Scripts
                 var httpClient = new HttpClient();
                 var url = $"https://cdn.cloudflare.steamstatic.com/steam/apps/{steamAppId}/library_600x900.jpg";
                 var bytes = await httpClient.GetByteArrayAsync(url);
-                ImageSource image = ImageSource.FromStream( () => new MemoryStream(bytes));
-                
-                return image;
+                if (bytes != null)
+                {
+                    ImageSource image = ImageSource.FromStream(() => new MemoryStream(bytes));
+                    return image;
+                }
+                return ImageSource.FromFile("nimo.png");
             }
             catch
             {
-                return null;
+                return ImageSource.FromFile("nimo.png");
             }
         }
     }

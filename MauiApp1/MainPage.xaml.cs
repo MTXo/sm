@@ -163,5 +163,39 @@ namespace MauiApp1
         {
             current.SteamAppId = int.TryParse(steamAID.Text, out int id) ? id : 0;
         }
+        public void SwitchBranch_Clicked(object sender, EventArgs e)
+        {
+            if (BranchEntry.IsEnabled == false)
+            {
+                BranchEntry.IsEnabled = true;
+                BranchEntry.IsVisible = true;
+                BranchPicker.IsEnabled = false;
+                BranchPicker.IsVisible = false;
+            }
+            else
+            {
+                BranchEntry.IsEnabled = false;
+                BranchEntry.IsVisible = false;
+                BranchPicker.IsEnabled = true;
+                BranchPicker.IsVisible = true;
+            }
+        }
+        void OnBorderSizeChanged(object sender, EventArgs e)
+        {
+            var view = (VisualElement)sender;
+
+            if (view.Width <= 0 || view.Height <= 0)
+                return;
+
+            // bierzemy mniejszy wymiar, zawsze idealny kwadrat
+            double size = Math.Min(view.Width, view.Height);
+
+            // zabezpieczenie przed zapętleniem
+            if (Math.Abs(view.Width - view.Height) < 0.5)
+                return;
+
+            view.WidthRequest = size;
+            view.HeightRequest = size;
+        }
     }
 }
