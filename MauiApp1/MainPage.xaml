@@ -3,13 +3,13 @@
              xmlns:x="http://schemas.microsoft.com/winfx/2009/xaml"
              x:Class="MauiApp1.MainPage"
              >
-    <Grid BackgroundColor="{AppThemeBinding Dark=#4f4f4f, Light=#4f4f4f}">
+    <Grid BackgroundColor="{AppThemeBinding Dark=#4f4f4f, Light=#004f4f4f}">
         <Grid ColumnDefinitions="82, 20*, 34*"
               RowDefinitions="*, Auto"
               ColumnSpacing="2"
               RowSpacing="2">
             <Grid Grid.Column="0"
-                  BackgroundColor="{AppThemeBinding Dark=#4f4f4f, Light=#4f4f4f}"
+                  BackgroundColor="{AppThemeBinding Dark=#4f4f4f, Light=#004f4f4f}"
                   RowDefinitions="*, auto, auto"
                   RowSpacing="2">
                 <Border Margin="2, 2, 0, 0" Grid.Row="0" BackgroundColor="{AppThemeBinding Light=#ffffff, Dark=#2f2f2f}" Stroke="{AppThemeBinding Light=Black, Dark=#5f5f5f}" StrokeShape="RoundRectangle 10" WidthRequest="80">
