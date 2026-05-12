@@ -235,6 +235,10 @@
                         <Label Text="Nazwa aplikacji: " />
                         <Entry x:Name="name_settings" Placeholder="Nazwa..." Unfocused="Name_Unfocused" HorizontalOptions="Fill"/>
                     </VerticalStackLayout>
+                    <VerticalStackLayout Spacing="2">
+                        <Label Text="Ścieżka folderu z zapisami: " VerticalOptions="Center"/>
+                        <Entry x:Name="savePathEntry" Placeholder="Ścieżka do folderu..." Unfocused="savePathEntry_Unfocused" HorizontalOptions="Fill"/>
+                    </VerticalStackLayout>
                     <Picker x:Name="ProcessPicker" HorizontalOptions="Fill" Title="Wybierz proces..." SelectedIndexChanged="ProcessPicker_SelectedIndexChanged"/>
                     <VerticalStackLayout Spacing="2">
                         <Label Text="Ścieżka pliku wykonywalnego: " VerticalOptions="Center"/>

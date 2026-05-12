@@ -202,6 +202,10 @@ namespace MauiApp1
             steamAID.Text = SteamHelper.GetSteamAppIdFromExe(current.ExePath)?.ToString() ?? "0";
             current.SteamAppId = int.TryParse(steamAID.Text, out int id) ? id : 0;
         }
+        private void savePathEntry_Unfocused(object sender, FocusEventArgs e)
+        {
+            current.SavePath = savePathEntry.Text;
+        }
         private void steamAIDEntry_Unfocused(object sender, FocusEventArgs e)
         {
             current.SteamAppId = int.TryParse(steamAID.Text, out int id) ? id : 0;

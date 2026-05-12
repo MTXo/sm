@@ -31,6 +31,18 @@ namespace MauiApp1.Scripts
         public int SteamAppId { get; set; }
         public string Shortcut => JustHelpers.GetShortcut(Name);
 
+        private string _savePath = string.Empty;
+
+        public string SavePath
+        {
+            get => _savePath;
+            set
+            {
+                _savePath = value;
+                OnPropertyChanged();
+            }
+        }
+
         public event PropertyChangedEventHandler? PropertyChanged;
 
         protected void OnPropertyChanged(string? name = null)
