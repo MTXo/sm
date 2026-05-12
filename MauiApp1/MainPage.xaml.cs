@@ -215,14 +215,16 @@ namespace MauiApp1
             if (BranchEntry.IsEnabled == false)
             {
                 BranchEntry.IsEnabled = true;
-                BranchEntry.IsVisible = true;
+                SaveBranchButton.IsEnabled = true;
+                BranchEntryStack.IsVisible = true;
                 BranchPicker.IsEnabled = false;
                 BranchPicker.IsVisible = false;
             }
             else
             {
                 BranchEntry.IsEnabled = false;
-                BranchEntry.IsVisible = false;
+                BranchEntryStack.IsVisible = false;
+                SaveBranchButton.IsEnabled = false;
                 BranchPicker.IsEnabled = true;
                 BranchPicker.IsVisible = true;
             }
@@ -243,6 +245,11 @@ namespace MauiApp1
 
             view.WidthRequest = size;
             view.HeightRequest = size;
+        }
+
+        private void SaveBranchButton_Clicked(object sender, EventArgs e)
+        {
+
         }
     }
 }

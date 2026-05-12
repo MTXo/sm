@@ -120,7 +120,19 @@
                     <VerticalStackLayout HorizontalOptions="Fill" Grid.Row="2">
                         <Grid RowDefinitions="*" ColumnDefinitions="*, 48">
                             <Picker x:Name="BranchPicker" Grid.Column="0"/>
-                            <Entry x:Name="BranchEntry" Placeholder="Wprowadź nazwę gałęzi" IsEnabled="False" IsVisible="False" Grid.Column="0"/>
+                            <Grid IsVisible="False" x:Name="BranchEntryStack" Grid.Column="0" ColumnDefinitions="*, 48" RowDefinitions="*">
+                                <Entry x:Name="BranchEntry" Placeholder="Wprowadź nazwę gałęzi" IsEnabled="False" Grid.Column="0"/>
+                                <ImageButton
+                                    HeightRequest="24" WidthRequest="24" VerticalOptions="End" HorizontalOptions="End" Grid.Column="1" x:Name="SaveBranchButton" Clicked="SaveBranchButton_Clicked">
+                                    <ImageButton.Source>
+                                        <FontImageSource
+                                            FontFamily="MaterialIcons"
+                                            Glyph="&#xe161;"
+                                            Color="{AppThemeBinding Light=Black, Dark=White}"
+                                            Size="24" />
+                                    </ImageButton.Source>
+                                </ImageButton>
+                            </Grid>
                             <ImageButton
                                 HeightRequest="24" WidthRequest="24" VerticalOptions="End" Clicked="SwitchBranch_Clicked" HorizontalOptions="End" Grid.Column="1">
                                 <ImageButton.Source>
