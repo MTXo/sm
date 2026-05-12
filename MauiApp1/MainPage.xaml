@@ -156,7 +156,20 @@
                 </Grid>
             </Border>
             <Border Grid.Column="2" Margin="0,2,2,0" BackgroundColor="{AppThemeBinding Light=#ffffff, Dark=#2f2f2f}" Stroke="{AppThemeBinding Light=Black, Dark=#5f5f5f}" StrokeShape="RoundRectangle 10">
-                <VerticalStackLayout>
+                <VerticalStackLayout Spacing="6">
+                    <Border Margin="8,8,8,0" 
+                        BackgroundColor="{AppThemeBinding Light=#f5f5f5, Dark=#1e1e1e}" 
+                        Stroke="{AppThemeBinding Light=Black, Dark=#5f5f5f}" 
+                        StrokeShape="RoundRectangle 8"
+                        Padding="4">
+                        
+                    <SearchBar x:Name="SavesSearchBar"
+                        Placeholder="Szukaj zapisów..."
+                        TextChanged="SavesSearchBar_TextChanged"
+                        BackgroundColor="Transparent"
+                        FontSize="14"
+                        HeightRequest="42"/> 
+                    </Border>
                     <ScrollView>
                         <CollectionView
                             x:Name="SavesCollectionView"
