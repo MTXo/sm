@@ -39,7 +39,7 @@ namespace MauiApp1.Scripts
         {
             string date = save.Timestamp.ToString("dd.MM.yyyy") ?? "—"; // data
             string time = save.Timestamp.ToString("HH:mm:ss") ?? "—"; // godzina
-            string fileSize = FormatFileSize(save.FileSize); // rozmiar który jest formatowany do czytelnej formy (B, KB, MB, GB)
+            string fileSize = save.FileSize; // rozmiar który jest formatowany do czytelnej formy (B, KB, MB, GB)
 
             var grid = new Grid
             {
@@ -79,23 +79,6 @@ namespace MauiApp1.Scripts
             label.SetAppThemeColor(Label.TextColorProperty, Colors.Black, Colors.White);
 
             return label;
-        }
-
-        private static string FormatFileSize(long bytes)
-        {
-            if (bytes < 1024)
-                return $"{bytes} B";
-
-            double kb = bytes / 1024.0;
-            if (kb < 1024)
-                return $"{kb:F1} KB";
-
-            double mb = kb / 1024.0;
-            if (mb < 1024)
-                return $"{mb:F1} MB";
-
-            double gb = mb / 1024.0;
-            return $"{gb:F2} GB";
         }
     }
 }

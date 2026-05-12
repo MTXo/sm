@@ -1,4 +1,5 @@
 using MauiApp1.Scripts;
+using System.Collections.ObjectModel;
 
 namespace MauiApp1
 {
@@ -6,12 +7,54 @@ namespace MauiApp1
     {
         Scripts.AppInfo current = new Scripts.AppInfo();
         bool _popupOpen = false;
+        public ObservableCollection<ZipArchiveInfo> Saves { get; set; } = new();
         public MainPage()
         {
             InitializeComponent();
+            SavesCollectionView.ItemsSource = Saves;
             AppCollectionView.ItemsSource = AppScript.apps;
+
+            LoadSaves(); // tymczasowe wczytywanie zapisów do wyświetlenia, docelowo będzie to pobieranie z folderu z zapisami i formatowanie ich do listy Saves, która jest powiązana z interfejsem użytkownika (SavesCollectionView)
+            
         }
 
+        private void LoadSaves() // tymczasowa funkcja do wczytywania przykładowych zapisów, docelowo będzie to pobieranie z folderu z zapisami i formatowanie ich do listy Saves, która jest powiązana z interfejsem użytkownika (SavesCollectionView)
+        {
+            Saves.Clear();
+
+            Saves.Add(new ZipArchiveInfo
+            {
+                FullPath = @"C:\test1.zip",
+                FileName = "test1.zip",
+                Timestamp = DateTime.Now,
+                GameName = "Game 1",
+                Description = "Save 1",
+                FileSize = "354382"
+            });
+
+            Saves.Add(new ZipArchiveInfo
+            {
+                FullPath = @"C:\test2.zip",
+                FileName = "test2.zip",
+                Timestamp = DateTime.Now.AddDays(-1),
+                GameName = "Game 2",
+                Description = "Save 2",
+                FileSize = "29555555"
+            });
+        }
+
+        private void AddSave_Clicked(object sender, EventArgs e)
+        {
+            if (current.ExePath != null && current.ExePath != "")
+            {
+                Backuper.Backup(
+                    Path.GetDirectoryName(current.ExePath) ?? "",
+                    Path.Combine(Environment.GetFolderPath(Environment.SpecialFolder.MyDocuments), "GameSaves"),
+                    current.Name,
+                    DateTime.Now.ToString("yyyy-MM-dd_HH-mm-ss")
+                );
+            }
+        }
         private void AddApp_Clicked(object sender, EventArgs e)
         {
             AppScript.apps.Add(new Scripts.AppInfo { Name = "New App", ExePath = "", SteamAppId = 0 });
