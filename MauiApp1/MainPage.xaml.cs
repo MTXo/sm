@@ -1,5 +1,6 @@
 using MauiApp1.Scripts;
 using System.Collections.ObjectModel;
+using System.Diagnostics;
 
 namespace MauiApp1
 {
@@ -57,7 +58,11 @@ namespace MauiApp1
         }
         private void AddApp_Clicked(object sender, EventArgs e)
         {
-            AppScript.apps.Add(new Scripts.AppInfo { Name = "New App", ExePath = "", SteamAppId = 0 });
+            DatabaseManager.AddGra("New App", 0, "", "", false, 0);
+            int lastid = DatabaseManager.GetGraCount() - 1;
+            AppScript.apps.Add(new Scripts.AppInfo { Id = lastid, Name = "New App", ExePath = "", SteamAppId = 0 });
+
+            Debug.WriteLine(DatabaseManager.Fin)
         }
         async void OpenPopup_Clicked(object sender, EventArgs e)
         {

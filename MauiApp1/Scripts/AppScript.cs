@@ -8,6 +8,7 @@ namespace MauiApp1.Scripts
 {
     public class AppInfo : INotifyPropertyChanged
     {
+        public int Id { get; set; }
         private string _name = string.Empty;
         public string Name
         {
