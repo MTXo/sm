@@ -6,75 +6,73 @@ namespace MauiApp1
 {
     public partial class MainPage : ContentPage
     {
-        Scripts.AppInfo current = new Scripts.AppInfo();
+        Scripts.AppInfo currentGame = new Scripts.AppInfo();
+        Scripts.BranchInfo currentBranch = new Scripts.BranchInfo();
         bool _popupOpen = false;
-        public ObservableCollection<ZipArchiveInfo> Saves { get; set; } = new();
         public MainPage()
         {
+            Database.CreateDatabase();
             InitializeComponent();
-            SavesCollectionView.ItemsSource = Saves;
+            SavesCollectionView.ItemsSource = AppScript.saves;
             AppCollectionView.ItemsSource = AppScript.apps;
 
-            LoadSaves(); // tymczasowe wczytywanie zapisów do wyświetlenia, docelowo będzie to pobieranie z folderu z zapisami i formatowanie ich do listy Saves, która jest powiązana z interfejsem użytkownika (SavesCollectionView)
+            LoadStartData(); // tymczasowe wczytywanie zapisów do wyświetlenia, docelowo będzie to pobieranie z folderu z zapisami i formatowanie ich do listy Saves, która jest powiązana z interfejsem użytkownika (SavesCollectionView)
             
         }
 
-        private void LoadSaves() // tymczasowa funkcja do wczytywania przykładowych zapisów, docelowo będzie to pobieranie z folderu z zapisami i formatowanie ich do listy Saves, która jest powiązana z interfejsem użytkownika (SavesCollectionView)
+        private void LoadStartData() // tymczasowa funkcja do wczytywania przykładowych zapisów, docelowo będzie to pobieranie z folderu z zapisami i formatowanie ich do listy Saves, która jest powiązana z interfejsem użytkownika (SavesCollectionView)
         {
-            Saves.Clear();
+            AppScript.saves.Clear();
+            AppScript.apps.Clear();
 
-            Saves.Add(new ZipArchiveInfo
+            foreach (var game in Database.GetAllGames())
             {
-                FullPath = @"C:\test1.zip",
-                FileName = "test1.zip",
-                Timestamp = DateTime.Now,
-                GameName = "Game 1",
-                Description = "Save 1",
-                FileSize = "354382"
-            });
-
-            Saves.Add(new ZipArchiveInfo
-            {
-                FullPath = @"C:\test2.zip",
-                FileName = "test2.zip",
-                Timestamp = DateTime.Now.AddDays(-1),
-                GameName = "Game 2",
-                Description = "Save 2",
-                FileSize = "29555555"
-            });
+                AppScript.apps.Add(new Scripts.AppInfo
+                {
+                    Id = game.Id,
+                    Name = game.Name,
+                    ExePath = game.GamePath,
+                    SavePath = game.SavePath,
+                    SteamAppId = game.SteamAppId,
+                    AutoSave = game.AutoSave,
+                    AutoSaveInterval = game.AutoSavePeriod
+                });
+            }
         }
 
         private void AddSave_Clicked(object sender, EventArgs e)
         {
-            if (current.ExePath != null && current.ExePath != "")
+            if (currentGame.ExePath != null && currentGame.ExePath != "")
             {
                 Backuper.Backup(
-                    Path.GetDirectoryName(current.ExePath) ?? "",
+                    Path.GetDirectoryName(currentGame.ExePath) ?? "",
                     Path.Combine(Environment.GetFolderPath(Environment.SpecialFolder.MyDocuments), "GameSaves"),
-                    current.Name,
+                    currentGame.Name,
                     DateTime.Now.ToString("yyyy-MM-dd_HH-mm-ss")
                 );
             }
         }
         private void AddApp_Clicked(object sender, EventArgs e)
         {
-            DatabaseManager.AddGra("New App", 0, "", "", false, 0);
-            int lastid = DatabaseManager.GetGraCount() - 1;
+            
+            Database.AddGame("New App", 0, "", "", false, 0);
+            int lastid = (Database.GetGameCount() > 0 ? Database.GetAllGames().Last().Id : 1) - 1; // pobieranie id ostatnio dodanej gry, jeśli nie ma żadnej gry to id będzie 1 i to jest odejmowane o 1, ponieważ id w bazie danych zaczyna się od 1, a w aplikacji chcemy, żeby zaczynało się od 0, więc odejmujemy 1 od id pobranego z bazy danych
             AppScript.apps.Add(new Scripts.AppInfo { Id = lastid, Name = "New App", ExePath = "", SteamAppId = 0 });
 
-            Debug.WriteLine(DatabaseManager.Fin)
         }
         async void OpenPopup_Clicked(object sender, EventArgs e)
         {
             steamAID.Text = "";
             exePathEntry.Text = "";
+            savePathEntry.Text = "";
 
             ProcessPicker.Title = "Wybierz proces... ( Ładowanie listy procesów )";
             _ = LoadProcessesAsync();
 
-            name_settings.Text = current.Name;
-            exePathEntry.Text = current.ExePath;
-            steamAID.Text = current.SteamAppId > 0 ? current.SteamAppId.ToString() : "";
+            name_settings.Text = currentGame.Name;
+            exePathEntry.Text = currentGame.ExePath;
+            savePathEntry.Text = currentGame.SavePath;
+            steamAID.Text = currentGame.SteamAppId > 0 ? currentGame.SteamAppId.ToString() : "";
 
             PopupOverlay.IsVisible = true;
 
@@ -125,7 +123,7 @@ namespace MauiApp1
 
             PopupOverlay.IsVisible = false;
 
-            gameBanner.Source = await HTMLConnection.GetImageSourceAsync(current.SteamAppId.ToString());
+            gameBanner.Source = await HTMLConnection.GetImageSourceAsync(currentGame.SteamAppId.ToString());
         }
 
         async void OpenPopupSettings_Clicked(object sender, EventArgs e)
@@ -164,15 +162,16 @@ namespace MauiApp1
         {
             if (e.CurrentSelection.Count > 0)
             {
-                current = (Scripts.AppInfo)e.CurrentSelection[0];
+                currentGame = (Scripts.AppInfo)e.CurrentSelection[0];
                 DetailsGrid.IsVisible = true;
-                gameBanner.Source = await HTMLConnection.GetImageSourceAsync(current.SteamAppId.ToString()); // pobieranie zdjęcia do baneru
+                gameBanner.Source = await HTMLConnection.GetImageSourceAsync(currentGame.SteamAppId.ToString()); // pobieranie zdjęcia do baneru
             }
 
         }
         async void DeleteCurrent_Clicked(object sender, EventArgs e)
         {
-            AppScript.apps.Remove(current);
+            AppScript.apps.Remove(currentGame);
+            Database.DeleteGame(currentGame.Id);
             AppCollectionView.SelectedItem = null;
             DetailsGrid.IsVisible = false;
             ClosePopup_Clicked(sender, e);
@@ -180,7 +179,8 @@ namespace MauiApp1
 
         private void Name_Unfocused(object sender, FocusEventArgs e)
         {
-            current.Name = name_settings.Text;
+            currentGame.Name = name_settings.Text;
+            Database.UpdateGame(currentGame.Id, currentGame.Name, currentGame.SteamAppId, currentGame.ExePath, currentGame.SavePath, currentGame.AutoSave, currentGame.AutoSaveInterval);
         }
 
         private void ProcessPicker_SelectedIndexChanged(object sender, EventArgs e)
@@ -190,9 +190,10 @@ namespace MauiApp1
                 if (_popupOpen)
                 {
                     exePathEntry.Text = ProcessHelpers.GetProcessPath(ProcessPicker.SelectedItem?.ToString() ?? "") ?? "";
-                    current.ExePath = exePathEntry.Text;
-                    steamAID.Text = SteamHelper.GetSteamAppIdFromExe(current.ExePath)?.ToString() ?? "0";
-                    current.SteamAppId = int.TryParse(steamAID.Text, out int id) ? id : 0;
+                    currentGame.ExePath = exePathEntry.Text;
+                    steamAID.Text = SteamHelper.GetSteamAppIdFromExe(currentGame.ExePath)?.ToString() ?? "0";
+                    currentGame.SteamAppId = int.TryParse(steamAID.Text, out int id) ? id : 0;
+                    Database.UpdateGame(currentGame.Id, currentGame.Name, currentGame.SteamAppId, currentGame.ExePath, currentGame.SavePath, currentGame.AutoSave, currentGame.AutoSaveInterval);
                 }
             } 
             catch 
@@ -203,17 +204,20 @@ namespace MauiApp1
 
         private void exePathEntry_Unfocused(object sender, FocusEventArgs e)
         {
-            current.ExePath = exePathEntry.Text;
-            steamAID.Text = SteamHelper.GetSteamAppIdFromExe(current.ExePath)?.ToString() ?? "0";
-            current.SteamAppId = int.TryParse(steamAID.Text, out int id) ? id : 0;
+            currentGame.ExePath = exePathEntry.Text;
+            steamAID.Text = SteamHelper.GetSteamAppIdFromExe(currentGame.ExePath)?.ToString() ?? "0";
+            currentGame.SteamAppId = int.TryParse(steamAID.Text, out int id) ? id : 0;
+            Database.UpdateGame(currentGame.Id, currentGame.Name, currentGame.SteamAppId, currentGame.ExePath, currentGame.SavePath, currentGame.AutoSave, currentGame.AutoSaveInterval);
         }
         private void savePathEntry_Unfocused(object sender, FocusEventArgs e)
         {
-            current.SavePath = savePathEntry.Text;
+            currentGame.SavePath = savePathEntry.Text;
+            Database.UpdateGame(currentGame.Id, currentGame.Name, currentGame.SteamAppId, currentGame.ExePath, currentGame.SavePath, currentGame.AutoSave, currentGame.AutoSaveInterval);
         }
         private void steamAIDEntry_Unfocused(object sender, FocusEventArgs e)
         {
-            current.SteamAppId = int.TryParse(steamAID.Text, out int id) ? id : 0;
+            currentGame.SteamAppId = int.TryParse(steamAID.Text, out int id) ? id : 0;
+            Database.UpdateGame(currentGame.Id, currentGame.Name, currentGame.SteamAppId, currentGame.ExePath, currentGame.SavePath, currentGame.AutoSave, currentGame.AutoSaveInterval);
         }
         public void SwitchBranch_Clicked(object sender, EventArgs e)
         {
@@ -221,6 +225,7 @@ namespace MauiApp1
             {
                 BranchEntry.IsEnabled = true;
                 SaveBranchButton.IsEnabled = true;
+                AddBranchButton.IsEnabled = true;
                 BranchEntryStack.IsVisible = true;
                 BranchPicker.IsEnabled = false;
                 BranchPicker.IsVisible = false;
@@ -230,6 +235,7 @@ namespace MauiApp1
                 BranchEntry.IsEnabled = false;
                 BranchEntryStack.IsVisible = false;
                 SaveBranchButton.IsEnabled = false;
+                AddBranchButton.IsEnabled = false;
                 BranchPicker.IsEnabled = true;
                 BranchPicker.IsVisible = true;
             }
@@ -254,6 +260,24 @@ namespace MauiApp1
 
         private void SaveBranchButton_Clicked(object sender, EventArgs e)
         {
+            Database.GetAllBranches().Where(b => b.GameId == currentGame.Id).ToList().ForEach(b =>
+            {
+                if(b.Name == BranchEntry.Text)
+                {
+                    return; // nazwa już istnieje, nie chcemy duplikatów
+                }
+            });
+            
+        }
+        private void AddBranchButton_Clicked(object sender, EventArgs e)
+        {
+            Database.GetAllBranches().Where(b => b.GameId == currentGame.Id).ToList().ForEach(b =>
+            {
+                if (b.Name == BranchEntry.Text)
+                {
+                    return; // nazwa już istnieje, nie chcemy duplikatów
+                }
+            });
 
         }
     }

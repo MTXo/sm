@@ -5,12 +5,10 @@ namespace MauiApp1.Scripts
 {
     public struct ZipArchiveInfo
     {
-        public string FullPath { get; set; }
         public string FileName { get; set; }
 
         public DateTime Timestamp { get; set; }
-        public string GameName { get; set; }
-        public string Description { get; set; }
+
         public string FileSize { get; set; }
     }
     class Backuper
@@ -110,15 +108,15 @@ namespace MauiApp1.Scripts
                     long unFormattedFileSize = new FileInfo(file).Length;
                     string fileSize = FormatFileSize(unFormattedFileSize);
 
-                    result.Add(new ZipArchiveInfo
-                    {
-                        FullPath = file,
-                        FileName = Path.GetFileName(file),
-                        Timestamp = timestamp,
-                        GameName = name1,
-                        Description = name2,
-                        FileSize = fileSize
-                    });
+                    //result.Add(new ZipArchiveInfo
+                    //{
+                    //    FullPath = file,
+                    //    FileName = Path.GetFileName(file),
+                    //    Timestamp = timestamp,
+                    //    GameName = name1,
+                    //    Description = name2,
+                    //    FileSize = fileSize
+                    //});
                 }
                 catch
                 {
