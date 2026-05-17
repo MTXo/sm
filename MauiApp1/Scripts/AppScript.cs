@@ -8,7 +8,7 @@ namespace MauiApp1.Scripts
 {
     public class AppInfo : INotifyPropertyChanged
     {
-        public int Id { get; set; }
+        public int Id { get; set; } = -1;
         private string _name = string.Empty;
         public string Name
         {
@@ -48,6 +48,8 @@ namespace MauiApp1.Scripts
 
         public int AutoSaveInterval { get; set; }
 
+        public int LastSelectedBranch { get; set; } = 0;
+
         public event PropertyChangedEventHandler? PropertyChanged;
 
         protected void OnPropertyChanged(string? name = null)
@@ -55,7 +57,7 @@ namespace MauiApp1.Scripts
     }
     public class BranchInfo : INotifyPropertyChanged
     {
-        public int Id { get; set; }
+        public int Id { get; set; } = -1;
         private string _name = string.Empty;
         private int _gameId;
 
@@ -85,7 +87,7 @@ namespace MauiApp1.Scripts
 
     public class SaveInfo : INotifyPropertyChanged
     {
-        public int Id { get; set; }
+        public int Id { get; set; } = -1;
         private string _fileName = string.Empty;
         private int _branchId;
         private DateTime _saveTime;

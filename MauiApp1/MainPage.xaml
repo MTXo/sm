@@ -119,7 +119,7 @@
                     </FlexLayout>
                     <VerticalStackLayout HorizontalOptions="Fill" Grid.Row="2">
                         <Grid RowDefinitions="*" ColumnDefinitions="*, 48">
-                            <Picker x:Name="BranchPicker" Grid.Column="0"/>
+                            <Picker x:Name="BranchPicker" Grid.Column="0" SelectedIndexChanged="BranchPicker_SelectedIndexChanged"/>
                             <Grid IsVisible="False" x:Name="BranchEntryStack" Grid.Column="0" ColumnDefinitions="*, 48, 48" RowDefinitions="*">
                                 <Entry x:Name="BranchEntry" Placeholder="Wprowadź nazwę gałęzi" IsEnabled="False" Grid.Column="0"/>
                                 <Border HorizontalOptions="End" Grid.Column="1" Stroke="Black" StrokeThickness="0" StrokeShape="RoundRectangle 5">

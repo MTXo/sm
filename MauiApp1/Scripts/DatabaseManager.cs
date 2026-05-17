@@ -17,6 +17,7 @@ namespace MauiApp1.Scripts
         public string SavePath { get; set; } = string.Empty;
         public bool AutoSave { get; set; }
         public int AutoSavePeriod { get; set; }
+        public int LastSelectedBranch { get; set; }
     }
 
     public class Branch
@@ -67,7 +68,8 @@ namespace MauiApp1.Scripts
                 path TEXT,
                 savepath TEXT,
                 autosave INTEGER NOT NULL DEFAULT 0,
-                autosaveperiod INTEGER
+                autosaveperiod INTEGER,
+                lastselectedbranch INTEGER
             );
 
             CREATE TABLE IF NOT EXISTS BRANCH (
@@ -118,12 +120,12 @@ namespace MauiApp1.Scripts
             @"
             INSERT INTO GRA
             (nazwa, steamappid, path, savepath,
-             autosave, autosaveperiod)
+             autosave, autosaveperiod, lastselectedbranch)
 
             VALUES
             ($name, $steamappid, $path,
              $savepath, $autosave,
-             $autosaveperiod);
+             $autosaveperiod, $lastselectedbranch);
 
             SELECT last_insert_rowid();
             ";
@@ -145,6 +147,9 @@ namespace MauiApp1.Scripts
 
             command.Parameters.AddWithValue(
                 "$autosaveperiod", autoSavePeriod);
+
+            command.Parameters.AddWithValue(
+                "$lastselectedbranch", 0);
 
             return (long)(command.ExecuteScalar() ?? -1);
         }
@@ -341,10 +346,37 @@ namespace MauiApp1.Scripts
             command.ExecuteNonQuery();
         }
 
+        public static void UpdateGameSelectedBranch(
+            int id,
+            int branch_id)
+        {
+            using var connection =
+                new SqliteConnection(_connectionString);
+
+            connection.Open();
+
+            var command = connection.CreateCommand();
+
+            command.CommandText =
+            @"
+            UPDATE GRA
+            SET
+                lastselectedbranch = $lastselectedbranch
+            WHERE id = $id;
+            ";
+
+            command.Parameters.AddWithValue(
+                "$id", id);
+
+            command.Parameters.AddWithValue(
+                "$lastselectedbranch", branch_id);
+
+            command.ExecuteNonQuery();
+        }
+
         public static void UpdateBranch(
             int id,
-            string name,
-            int gameId)
+            string name)
         {
             using var connection =
                 new SqliteConnection(_connectionString);
@@ -358,7 +390,6 @@ namespace MauiApp1.Scripts
             UPDATE BRANCH
             SET
                 nazwa = $name,
-                gra_id = $gameid
             WHERE id = $id;
             ";
 
@@ -367,9 +398,6 @@ namespace MauiApp1.Scripts
 
             command.Parameters.AddWithValue(
                 "$name", name);
-
-            command.Parameters.AddWithValue(
-                "$gameid", gameId);
 
             command.ExecuteNonQuery();
         }
@@ -462,7 +490,11 @@ namespace MauiApp1.Scripts
 
                     AutoSavePeriod =
                         Convert.ToInt32(
-                            reader["autosaveperiod"])
+                            reader["autosaveperiod"]),
+
+                    LastSelectedBranch =
+                        Convert.ToInt32(
+                            reader["lastselectedbranch"])
                 });
             }
 

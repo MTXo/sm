@@ -12,18 +12,20 @@ namespace MauiApp1
         public MainPage()
         {
             Database.CreateDatabase();
+            LoadStartData();
             InitializeComponent();
+
             SavesCollectionView.ItemsSource = AppScript.saves;
             AppCollectionView.ItemsSource = AppScript.apps;
-
-            LoadStartData(); // tymczasowe wczytywanie zapisów do wyświetlenia, docelowo będzie to pobieranie z folderu z zapisami i formatowanie ich do listy Saves, która jest powiązana z interfejsem użytkownika (SavesCollectionView)
-            
+            BranchPicker.ItemsSource = AppScript.branches;
+            BranchPicker.ItemDisplayBinding = new Binding("Name");
         }
 
         private void LoadStartData() // tymczasowa funkcja do wczytywania przykładowych zapisów, docelowo będzie to pobieranie z folderu z zapisami i formatowanie ich do listy Saves, która jest powiązana z interfejsem użytkownika (SavesCollectionView)
         {
             AppScript.saves.Clear();
             AppScript.apps.Clear();
+            AppScript.branches.Clear();
 
             foreach (var game in Database.GetAllGames())
             {
@@ -35,7 +37,17 @@ namespace MauiApp1
                     SavePath = game.SavePath,
                     SteamAppId = game.SteamAppId,
                     AutoSave = game.AutoSave,
-                    AutoSaveInterval = game.AutoSavePeriod
+                    AutoSaveInterval = game.AutoSavePeriod,
+                    LastSelectedBranch = game.LastSelectedBranch,
+                });
+            }
+            foreach (var branch in Database.GetAllBranches())
+            {
+                AppScript.branches.Add(new Scripts.BranchInfo
+                {
+                    Id = branch.Id,
+                    Name = branch.Name,
+                    GameId = branch.GameId
                 });
             }
         }
@@ -56,9 +68,15 @@ namespace MauiApp1
         {
             
             Database.AddGame("New App", 0, "", "", false, 0);
-            int lastid = (Database.GetGameCount() > 0 ? Database.GetAllGames().Last().Id : 1) - 1; // pobieranie id ostatnio dodanej gry, jeśli nie ma żadnej gry to id będzie 1 i to jest odejmowane o 1, ponieważ id w bazie danych zaczyna się od 1, a w aplikacji chcemy, żeby zaczynało się od 0, więc odejmujemy 1 od id pobranego z bazy danych
+            int lastid = (Database.GetGameCount() > 0 ? Database.GetAllGames().Last().Id : 1); // pobieranie id ostatnio dodanej gry, jeśli nie ma żadnej gry to id będzie 1 i to jest odejmowane o 1, ponieważ id w bazie danych zaczyna się od 1, a w aplikacji chcemy, żeby zaczynało się od 0, więc odejmujemy 1 od id pobranego z bazy danych
             AppScript.apps.Add(new Scripts.AppInfo { Id = lastid, Name = "New App", ExePath = "", SteamAppId = 0 });
-
+            Database.AddBranch("Default", lastid);
+            AppScript.branches.Add(new Scripts.BranchInfo
+            {
+                Id = Database.GetAllBranches().Last().Id,
+                Name = "Default",
+                GameId = lastid,
+            });
         }
         async void OpenPopup_Clicked(object sender, EventArgs e)
         {
@@ -163,6 +181,13 @@ namespace MauiApp1
             if (e.CurrentSelection.Count > 0)
             {
                 currentGame = (Scripts.AppInfo)e.CurrentSelection[0];
+                BranchPicker.ItemsSource = AppScript.branches.Where(b => b.GameId == currentGame.Id).ToList();
+                if(BranchPicker.ItemsSource.Cast<Scripts.BranchInfo>().Any())
+                {
+                    BranchPicker.SelectedIndex = currentGame.LastSelectedBranch;
+                    currentBranch = (Scripts.BranchInfo)BranchPicker.SelectedItem;
+                    BranchEntry.Text = currentBranch.Name;
+                }
                 DetailsGrid.IsVisible = true;
                 gameBanner.Source = await HTMLConnection.GetImageSourceAsync(currentGame.SteamAppId.ToString()); // pobieranie zdjęcia do baneru
             }
@@ -260,17 +285,46 @@ namespace MauiApp1
 
         private void SaveBranchButton_Clicked(object sender, EventArgs e)
         {
+            if (String.IsNullOrEmpty(BranchEntry.Text))
+            {
+                return;
+            }
+            bool dont = false;
             Database.GetAllBranches().Where(b => b.GameId == currentGame.Id).ToList().ForEach(b =>
             {
                 if(b.Name == BranchEntry.Text)
                 {
-                    return; // nazwa już istnieje, nie chcemy duplikatów
+                    dont = true;
                 }
             });
-            
+            if(dont)
+            {
+                BranchEntry.Text = currentBranch.Name;
+                return;
+            }
+            if (currentBranch.Id != -1)
+            {
+                Database.UpdateBranch(currentBranch.Id, BranchEntry.Text);
+                try
+                {
+                    AppScript.branches.Where(b => b.Id == currentBranch.Id).FirstOrDefault()?.Name = BranchEntry.Text;
+                }
+                catch (Exception ex)
+                {
+                    Debug.WriteLine("Gratulacje - właśnie znalazłeś błąd, który nie powinien się wydarzyć. Gratulacje! Oto szczegóły błędu: " + ex.Message);
+                }
+            }
+            BranchPicker.ItemsSource = AppScript.branches.Where(b => b.GameId == currentGame.Id).ToList();
+            currentBranch = AppScript.branches.Where(b => b.Id == currentBranch.Id).FirstOrDefault() ?? new Scripts.BranchInfo();
+            BranchPicker.SelectedItem = currentBranch;
+
         }
         private void AddBranchButton_Clicked(object sender, EventArgs e)
         {
+            if(String.IsNullOrEmpty(BranchEntry.Text))
+            {
+                return;
+            }
             Database.GetAllBranches().Where(b => b.GameId == currentGame.Id).ToList().ForEach(b =>
             {
                 if (b.Name == BranchEntry.Text)
@@ -278,7 +332,21 @@ namespace MauiApp1
                     return; // nazwa już istnieje, nie chcemy duplikatów
                 }
             });
+            Database.AddBranch(BranchEntry.Text, currentGame.Id);
+            AppScript.branches.Add(new BranchInfo { Id = Database.GetAllBranches().Last().Id, Name = BranchEntry.Text, GameId = currentGame.Id });
+            Database.UpdateGameSelectedBranch(currentGame.Id, Database.GetAllBranches().Last().Id);
+            AppScript.apps.Where(g => g.Id == currentGame.Id).FirstOrDefault()?.LastSelectedBranch = Database.GetAllBranches().Last().Id;
+            BranchPicker.ItemsSource = AppScript.branches.Where(b => b.GameId == currentGame.Id).ToList();
+            BranchPicker.SelectedItem = AppScript.branches.Last();
+            currentBranch = AppScript.branches.Last();
+        }
 
+        private void BranchPicker_SelectedIndexChanged(object sender, EventArgs e)
+        {
+            currentBranch = (Scripts.BranchInfo)BranchPicker.SelectedItem;
+            BranchEntry.Text = ((Scripts.BranchInfo)BranchPicker.SelectedItem)?.Name ?? "";
+            Database.UpdateGameSelectedBranch(currentGame.Id, currentBranch.Id);
+            AppScript.apps.Where(g => g.Id == currentGame.Id).FirstOrDefault()?.LastSelectedBranch = currentBranch.Id;
         }
     }
 }
