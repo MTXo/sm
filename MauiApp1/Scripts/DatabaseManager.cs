@@ -41,8 +41,9 @@ namespace MauiApp1.Scripts
 
     public static class Database
     {
+
         private static string _connectionString =
-            $"Data Source={Environment.GetFolderPath(Environment.SpecialFolder.ApplicationData)}/ProgramDB.db";
+            $"Data Source={Environment.GetFolderPath(Environment.SpecialFolder.ApplicationData)}/MW Save Manager/ProgramDB.db";
 
         // =========================
         // CREATE DATABASE
@@ -50,6 +51,13 @@ namespace MauiApp1.Scripts
 
         public static void CreateDatabase()
         {
+            var dbDirectory = Path.Combine(Environment.GetFolderPath(Environment.SpecialFolder.ApplicationData), "MW Save Manager");
+            if (!Directory.Exists(dbDirectory))
+            {
+                Directory.CreateDirectory(dbDirectory);
+                Directory.CreateDirectory(Path.Combine(dbDirectory, "Backups"));
+            }
+
             using var connection =
                 new SqliteConnection(_connectionString);
 

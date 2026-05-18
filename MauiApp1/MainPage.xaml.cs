@@ -50,6 +50,17 @@ namespace MauiApp1
                     GameId = branch.GameId
                 });
             }
+            foreach (var save in Database.GetAllSaves())
+            {
+                AppScript.saves.Add(new Scripts.SaveInfo
+                {
+                    Id = save.Id,
+                    FileName = save.FileName,
+                    BranchId = save.BranchId,
+                    SaveTime = save.Date
+                });
+            }
+            Debug.WriteLine("Dane zostały wczytane z bazy danych. Liczba gier: " + AppScript.apps.Count + ", liczba gałęzi: " + AppScript.branches.Count + ", liczba zapisów: " + AppScript.saves.Count);
         }
 
         private void AddSave_Clicked(object sender, EventArgs e)
@@ -347,6 +358,25 @@ namespace MauiApp1
             BranchEntry.Text = ((Scripts.BranchInfo)BranchPicker.SelectedItem)?.Name ?? "";
             Database.UpdateGameSelectedBranch(currentGame.Id, currentBranch.Id);
             AppScript.apps.Where(g => g.Id == currentGame.Id).FirstOrDefault()?.LastSelectedBranch = currentBranch.Id;
+        }
+
+        private void SaveSnapshot_Clicked(object sender, EventArgs e)
+        {
+            if (currentGame.Id != -1 && currentBranch.Id != -1 && !string.IsNullOrEmpty(currentGame.SavePath))
+            {
+                {
+                    DateTime now = DateTime.Now;
+                    string hash = AppScript.ReturnUniqueValue(now, currentBranch.Id.ToString());
+                    Database.AddSave(now, currentBranch.Id, hash);
+                    AppScript.saves.Add(new SaveInfo { Id = Database.GetAllSaves().Last().Id, FileName = hash, BranchId = currentBranch.Id, SaveTime = now });
+                    Backuper.Backup(
+                        Path.GetDirectoryName(currentGame.SavePath) ?? "",
+                        Path.Combine(Environment.GetFolderPath(Environment.SpecialFolder.ApplicationData), "MW Save Manager", "Backups"),
+                        currentGame.Name,
+                        hash
+                    );
+                }
+            }
         }
     }
 }

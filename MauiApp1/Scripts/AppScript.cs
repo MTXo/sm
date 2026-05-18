@@ -2,6 +2,7 @@
 using System.Collections.Generic;
 using System.Collections.ObjectModel;
 using System.ComponentModel;
+using System.Security.Cryptography;
 using System.Text;
 
 namespace MauiApp1.Scripts
@@ -129,5 +130,35 @@ namespace MauiApp1.Scripts
         public static ObservableCollection<AppInfo> apps = new ObservableCollection<AppInfo>();
         public static ObservableCollection<BranchInfo> branches = new ObservableCollection<BranchInfo>();
         public static ObservableCollection<SaveInfo> saves = new ObservableCollection<SaveInfo>();
+
+        public static string ReturnUniqueValue(DateTime date, string ID)
+        {
+            var result = default(byte[]);
+
+            using (var stream = new MemoryStream())
+            {
+                using (var writer = new BinaryWriter(stream, Encoding.UTF8, true))
+                {
+                    writer.Write(date.Ticks);
+                    writer.Write(ID);
+                }
+
+                stream.Position = 0;
+
+                using (var hash = SHA256.Create())
+                {
+                    result = hash.ComputeHash(stream);
+                }
+            }
+
+            var text = new string[20];
+
+            for (var i = 0; i < text.Length; i++)
+            {
+                text[i] = result[i].ToString("x2");
+            }
+
+            return string.Concat(text);
+        }
     }
 }
