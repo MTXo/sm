@@ -3,13 +3,13 @@
              xmlns:x="http://schemas.microsoft.com/winfx/2009/xaml"
              x:Class="MauiApp1.MainPage"
              >
-    <Grid BackgroundColor="{AppThemeBinding Dark=#4f4f4f, Light=#4f4f4f}">
+    <Grid BackgroundColor="{AppThemeBinding Dark=#4f4f4f, Light=#004f4f4f}">
         <Grid ColumnDefinitions="82, 20*, 34*"
               RowDefinitions="*, Auto"
               ColumnSpacing="2"
               RowSpacing="2">
             <Grid Grid.Column="0"
-                  BackgroundColor="{AppThemeBinding Dark=#4f4f4f, Light=#4f4f4f}"
+                  BackgroundColor="{AppThemeBinding Dark=#4f4f4f, Light=#004f4f4f}"
                   RowDefinitions="*, auto, auto"
                   RowSpacing="2">
                 <Border Margin="2, 2, 0, 0" Grid.Row="0" BackgroundColor="{AppThemeBinding Light=#ffffff, Dark=#2f2f2f}" Stroke="{AppThemeBinding Light=Black, Dark=#5f5f5f}" StrokeShape="RoundRectangle 10" WidthRequest="80">
@@ -21,8 +21,8 @@
                         >
                         <CollectionView.ItemTemplate>
                             <DataTemplate>
-                                <StackLayout Padding="0,2,0,0">
-                                    <Border VerticalOptions="Center" Stroke="{AppThemeBinding Light=Black, Dark=#5f5f5f}" StrokeShape="RoundRectangle 10" HeightRequest="48" WidthRequest="48">
+                                <StackLayout Padding="0,4,0,4">
+                                    <Border VerticalOptions="Center" Stroke="{AppThemeBinding Light=Black, Dark=#5f5f5f}" StrokeShape="RoundRectangle 3" HeightRequest="48" WidthRequest="58">
                                         <Label
                                             Text="{Binding Shortcut}"
                                             HorizontalOptions="Center"
@@ -74,11 +74,11 @@
             </Grid>
             <Border Margin="0,2,0,0" Grid.Column="1" BackgroundColor="{AppThemeBinding Light=#ffffff, Dark=#2f2f2f}" Stroke="{AppThemeBinding Light=Black, Dark=#5f5f5f}" StrokeShape="RoundRectangle 10">
                 <Grid
-                    RowDefinitions="48*, auto, 6*, 20*, 3*, 2*"
+                    RowDefinitions="48*, auto, 6*, 20*, 67"
                     RowSpacing="10"
                     BackgroundColor="{AppThemeBinding Light=White, Dark=#2f2f2f}"
-                    Padding="2,0,2,2"
-                    Margin="2,0,2,20"
+                    Padding="2,0,2,0"
+                    Margin="2,0,2,0"
                     x:Name="DetailsGrid"
                     IsVisible="False">
                     <Border
@@ -98,7 +98,7 @@
                         Direction="Row"
                         AlignItems="Start"
                         Grid.Row="1">
-                        <Button Text="Stwórz kopię zapisów" TextColor="{AppThemeBinding Light=Black, Dark=White}" BackgroundColor="{AppThemeBinding Light=#10000000, Dark=#10ffffff}" FontSize="14" Margin="2,2,0,0">
+                        <Button Text="Stwórz kopię zapisów" TextColor="{AppThemeBinding Light=Black, Dark=White}" BackgroundColor="{AppThemeBinding Light=#10000000, Dark=#10ffffff}" FontSize="14" Margin="2,2,0,0" Clicked="SaveSnapshot_Clicked">
                             <Button.ImageSource>
                                 <FontImageSource
                                     FontFamily="MaterialIcons"
@@ -119,10 +119,37 @@
                     </FlexLayout>
                     <VerticalStackLayout HorizontalOptions="Fill" Grid.Row="2">
                         <Grid RowDefinitions="*" ColumnDefinitions="*, 48">
-                            <Picker x:Name="BranchPicker" Grid.Column="0"/>
-                            <Entry x:Name="BranchEntry" Placeholder="Wprowadź nazwę gałęzi" IsEnabled="False" IsVisible="False" Grid.Column="0"/>
+                            <Picker x:Name="BranchPicker" Grid.Column="0" SelectedIndexChanged="BranchPicker_SelectedIndexChanged"/>
+                            <Grid IsVisible="False" x:Name="BranchEntryStack" Grid.Column="0" ColumnDefinitions="*, 48, 48" RowDefinitions="*">
+                                <Entry x:Name="BranchEntry" Placeholder="Wprowadź nazwę gałęzi" IsEnabled="False" Grid.Column="0"/>
+                                <Border HorizontalOptions="End" Grid.Column="1" Stroke="Black" StrokeThickness="0" StrokeShape="RoundRectangle 5">
+                                    <ImageButton
+                                        HeightRequest="24" WidthRequest="24" VerticalOptions="End" HorizontalOptions="End" x:Name="AddBranchButton" Clicked="AddBranchButton_Clicked">
+                                        <ImageButton.Source>
+                                            <FontImageSource
+                                                FontFamily="MaterialIcons"
+                                                Glyph="&#xe145;"
+                                                Color="{AppThemeBinding Light=Black, Dark=White}"
+                                                Size="24" />
+                                        </ImageButton.Source>
+                                    </ImageButton>
+                                </Border>
+                                <Border HorizontalOptions="End" Grid.Column="2" Stroke="Black" StrokeThickness="0" StrokeShape="RoundRectangle 5">
+                                <ImageButton
+                                    HeightRequest="24" WidthRequest="24" VerticalOptions="End" HorizontalOptions="End" x:Name="SaveBranchButton" Clicked="SaveBranchButton_Clicked">
+                                    <ImageButton.Source>
+                                        <FontImageSource
+                                            FontFamily="MaterialIcons"
+                                            Glyph="&#xe161;"
+                                            Color="{AppThemeBinding Light=Black, Dark=White}"
+                                            Size="24" />
+                                    </ImageButton.Source>
+                                </ImageButton>
+                                </Border>
+                            </Grid>
+                            <Border HorizontalOptions="End" Grid.Column="1" Stroke="Black" StrokeThickness="0" StrokeShape="RoundRectangle 5">
                             <ImageButton
-                                HeightRequest="24" WidthRequest="24" VerticalOptions="End" Clicked="SwitchBranch_Clicked" HorizontalOptions="End" Grid.Column="1">
+                                HeightRequest="24" WidthRequest="24" VerticalOptions="End" Clicked="SwitchBranch_Clicked">
                                 <ImageButton.Source>
                                     <FontImageSource
                                             FontFamily="MaterialIcons"
@@ -131,13 +158,14 @@
                                             Size="24" />
                                 </ImageButton.Source>
                             </ImageButton>
+                            </Border>
                         </Grid>
 
                     </VerticalStackLayout>
-                    <Border Margin="0,10,0,0" Grid.Row="3">
+                    <Border Margin="0,5,0,0" Grid.Row="3">
                         <Label Text="Autozapis" TextColor="{AppThemeBinding Light=Black, Dark=White}" />
                     </Border>
-                    <VerticalStackLayout Grid.Row="4">
+                    <VerticalStackLayout HeightRequest="58" Grid.Row="4">
                         <ImageButton
                             HeightRequest="58" 
                             WidthRequest="58"

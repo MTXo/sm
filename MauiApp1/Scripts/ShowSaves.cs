@@ -54,7 +54,7 @@ namespace MauiApp1.Scripts
                 },
             };
             // tworzenie etykiet dla opisu, nazwy pliku, daty, czasu i rozmiaru pliku
-            var descLabel = CreateLabel($"{save.Description}");
+            var descLabel = CreateLabel($"");
             var nameLabel = CreateLabel($"{save.FileName}");
             var dateLabel = CreateLabel($"{date}");
             var timeLabel = CreateLabel($"{time}");
