@@ -7,6 +7,8 @@ namespace MauiApp1
     {
         Scripts.AppInfo current = new Scripts.AppInfo();
         bool _popupOpen = false;
+        private string _searchText = string.Empty;
+        private List<ZipArchiveInfo> _allSaves = new();
         public ObservableCollection<ZipArchiveInfo> Saves { get; set; } = new();
         public MainPage()
         {
@@ -15,14 +17,16 @@ namespace MauiApp1
             AppCollectionView.ItemsSource = AppScript.apps;
 
             LoadSaves(); // tymczasowe wczytywanie zapisów do wyświetlenia, docelowo będzie to pobieranie z folderu z zapisami i formatowanie ich do listy Saves, która jest powiązana z interfejsem użytkownika (SavesCollectionView)
-            
+
+            SavesSearchBar.TextChanged += SavesSearchBar_TextChanged;
         }
 
         private void LoadSaves() // tymczasowa funkcja do wczytywania przykładowych zapisów, docelowo będzie to pobieranie z folderu z zapisami i formatowanie ich do listy Saves, która jest powiązana z interfejsem użytkownika (SavesCollectionView)
         {
             Saves.Clear();
+            _allSaves.Clear();
 
-            Saves.Add(new ZipArchiveInfo
+            var save1 = (new ZipArchiveInfo
             {
                 FullPath = @"C:\test1.zip",
                 FileName = "test1.zip",
@@ -32,7 +36,7 @@ namespace MauiApp1
                 FileSize = "354382"
             });
 
-            Saves.Add(new ZipArchiveInfo
+            var save2 = (new ZipArchiveInfo
             {
                 FullPath = @"C:\test2.zip",
                 FileName = "test2.zip",
@@ -41,6 +45,12 @@ namespace MauiApp1
                 Description = "Save 2",
                 FileSize = "29555555"
             });
+
+            Saves.Add(save1);
+            Saves.Add(save2);
+
+            _allSaves.Add(save1);
+            _allSaves.Add(save2);
         }
 
         private void AddSave_Clicked(object sender, EventArgs e)
@@ -243,6 +253,30 @@ namespace MauiApp1
 
             view.WidthRequest = size;
             view.HeightRequest = size;
+        }
+
+        private void SavesSearchBar_TextChanged(object? sender, TextChangedEventArgs e)
+        {
+            _searchText = e.NewTextValue?.Trim() ?? string.Empty;
+
+            if (string.IsNullOrWhiteSpace(_searchText))
+            {
+                Saves.Clear();
+                foreach (var save in _allSaves)
+                    Saves.Add(save);
+            }
+            else
+            {
+                var filtered = _allSaves.Where(s =>
+                    (s.Description?.Contains(_searchText, StringComparison.OrdinalIgnoreCase) == true) ||
+                    (s.GameName?.Contains(_searchText, StringComparison.OrdinalIgnoreCase) == true) ||
+                    (s.FileName?.Contains(_searchText, StringComparison.OrdinalIgnoreCase) == true)
+                ).ToList();
+
+                Saves.Clear();
+                foreach (var save in filtered)
+                    Saves.Add(save);
+            }
         }
     }
 }
