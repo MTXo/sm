@@ -107,7 +107,7 @@
                                     Color="{AppThemeBinding Light=Black, Dark=White}" />
                             </Button.ImageSource>
                         </Button>
-                        <Button Text="Przywróć wybrany zapis" TextColor="{AppThemeBinding Light=Black, Dark=White}" BackgroundColor="{AppThemeBinding Light=#10000000, Dark=#10ffffff}" FontSize="14" Margin="2,2,0,0">
+                        <Button Text="Przywróć wybrany zapis" TextColor="{AppThemeBinding Light=Black, Dark=White}" BackgroundColor="{AppThemeBinding Light=#10000000, Dark=#10ffffff}" FontSize="14" Margin="2,2,0,0" Clicked="RestoreSnapshot_Clicked">
                             <Button.ImageSource>
                                 <FontImageSource
                                     FontFamily="MaterialIcons"
@@ -124,7 +124,7 @@
                                 <Entry x:Name="BranchEntry" Placeholder="Wprowadź nazwę gałęzi" IsEnabled="False" Grid.Column="0"/>
                                 <Border HorizontalOptions="End" Grid.Column="1" Stroke="Black" StrokeThickness="0" StrokeShape="RoundRectangle 5">
                                     <ImageButton
-                                        HeightRequest="24" WidthRequest="24" VerticalOptions="End" HorizontalOptions="End" x:Name="AddBranchButton" Clicked="AddBranchButton_Clicked">
+                                        HeightRequest="24" WidthRequest="24" VerticalOptions="End" HorizontalOptions="End" x:Name="AddBranchButton" Clicked="AddBranchButton_Clicked" ToolTipProperties.Text="Add New Branch">
                                         <ImageButton.Source>
                                             <FontImageSource
                                                 FontFamily="MaterialIcons"
@@ -136,7 +136,7 @@
                                 </Border>
                                 <Border HorizontalOptions="End" Grid.Column="2" Stroke="Black" StrokeThickness="0" StrokeShape="RoundRectangle 5">
                                 <ImageButton
-                                    HeightRequest="24" WidthRequest="24" VerticalOptions="End" HorizontalOptions="End" x:Name="SaveBranchButton" Clicked="SaveBranchButton_Clicked">
+                                    HeightRequest="24" WidthRequest="24" VerticalOptions="End" HorizontalOptions="End" x:Name="SaveBranchButton" Clicked="SaveBranchButton_Clicked" ToolTipProperties.Text="Save Branch">
                                     <ImageButton.Source>
                                         <FontImageSource
                                             FontFamily="MaterialIcons"
@@ -149,7 +149,7 @@
                             </Grid>
                             <Border HorizontalOptions="End" Grid.Column="1" Stroke="Black" StrokeThickness="0" StrokeShape="RoundRectangle 5">
                             <ImageButton
-                                HeightRequest="24" WidthRequest="24" VerticalOptions="End" Clicked="SwitchBranch_Clicked">
+                                HeightRequest="24" WidthRequest="24" VerticalOptions="End" Clicked="SwitchBranch_Clicked" ToolTipProperties.Text="Branch Edit Mode">
                                 <ImageButton.Source>
                                     <FontImageSource
                                             FontFamily="MaterialIcons"
@@ -162,7 +162,7 @@
                         </Grid>
 
                     </VerticalStackLayout>
-                    <Border Margin="0,5,0,0" Grid.Row="3">
+                    <Border Margin="0,5,0,0" Grid.Row="3" IsVisible="False">
                         <Label Text="Autozapis" TextColor="{AppThemeBinding Light=Black, Dark=White}" />
                     </Border>
                     <VerticalStackLayout HeightRequest="58" Grid.Row="4">
@@ -171,7 +171,8 @@
                             WidthRequest="58"
                             HorizontalOptions="End" 
                             CornerRadius="7"
-                            Clicked="OpenPopup_Clicked">
+                            Clicked="OpenPopup_Clicked"
+                            ToolTipProperties.Text="Ustawienia Gry">
                             <ImageButton.Source>
                                 <FontImageSource
                                         FontFamily="MaterialIcons"
@@ -201,8 +202,10 @@
                     <ScrollView>
                         <CollectionView
                             x:Name="SavesCollectionView"
-                            ItemsSource="{Binding Saves}"
+                            ItemsSource="{Binding displaySaves}"
                             SelectionMode="Single"
+                            VerticalScrollBarVisibility="Default"
+                            HeightRequest="800"
                             IsVisible="True">
 
                             <CollectionView.ItemTemplate>
@@ -219,19 +222,19 @@
 
                                             <VerticalStackLayout Grid.Row="0" Grid.Column="0">
                                                 <Label 
-                                                    Text="{Binding Description}" 
+                                                    Text="{Binding Id}" 
                                                     FontAttributes="Bold"
                                                     FontSize="16"
                                                     TextColor="{AppThemeBinding Light=Black, Dark=White}"/>
 
                                                 <Label 
-                                                    Text="{Binding GameName}" 
+                                                    Text="{Binding BranchName}" 
                                                     FontSize="13"
                                                     TextColor="Gray"/>          
                                             </VerticalStackLayout>
 
                                             <Label
-                                                Text="{Binding FileSize}" 
+                                                Text="{Binding BranchId}" 
                                                 Grid.Row="0" 
                                                 Grid.Column="1"
                                                 HorizontalOptions="End"
@@ -240,7 +243,7 @@
                                                 TextColor="Gray"/>
 
                                             <Label 
-                                                Text="{Binding Timestamp, StringFormat='{0:dd.MM.yyyy HH:mm}'}"
+                                                Text="{Binding SaveTime, StringFormat='{0:dd.MM.yyyy HH:mm}'}"
                                                 Grid.Row="1"
                                                 Grid.ColumnSpan="2"
                                                 FontSize="12"
@@ -332,6 +335,7 @@
             WidthRequest="800">
                 <VerticalStackLayout Spacing="10" >
                     <Label Text="Ustawienia" FontSize="20" HorizontalOptions="Center"/>
+                    <Button Text="Wyczyść ustawienia" Clicked="ClearSettings_Clicked" TextColor="Red"/>
                     <ImageButton Grid.Column="4"
                         HeightRequest="58" WidthRequest="58" VerticalOptions="End" Clicked="ClosePopupSettings_Clicked" HorizontalOptions="End">
                         <ImageButton.Source>

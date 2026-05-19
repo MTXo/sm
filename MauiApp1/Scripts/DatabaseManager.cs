@@ -49,7 +49,7 @@ namespace MauiApp1.Scripts
         // CREATE DATABASE
         // =========================
 
-        public static void CreateDatabase()
+        public static void CreateDatabase(bool clear = false)
         {
             var dbDirectory = Path.Combine(Environment.GetFolderPath(Environment.SpecialFolder.ApplicationData), "MW Save Manager");
             if (!Directory.Exists(dbDirectory))
@@ -65,6 +65,18 @@ namespace MauiApp1.Scripts
 
             var command = connection.CreateCommand();
 
+            if (clear)
+            {
+                var command2 = connection.CreateCommand();
+                command2.CommandText =
+                @"
+                DROP TABLE IF EXISTS ZAPIS;
+                DROP TABLE IF EXISTS BRANCH;
+                DROP TABLE IF EXISTS GRA;
+                ";
+                command2.ExecuteNonQuery();
+            }
+            
             command.CommandText =
             @"
             PRAGMA foreign_keys = ON;
@@ -103,6 +115,8 @@ namespace MauiApp1.Scripts
             ";
 
             command.ExecuteNonQuery();
+            
+            connection.Close();
         }
 
         // =========================
@@ -159,7 +173,11 @@ namespace MauiApp1.Scripts
             command.Parameters.AddWithValue(
                 "$lastselectedbranch", 0);
 
-            return (long)(command.ExecuteScalar() ?? -1);
+            var tmp = command.ExecuteScalar() ?? -1;
+
+            connection.Close();
+
+            return (long)(tmp);
         }
 
         // =========================
@@ -194,7 +212,11 @@ namespace MauiApp1.Scripts
             command.Parameters.AddWithValue(
                 "$gameid", gameId);
 
-            return (long)(command.ExecuteScalar() ?? -1);
+            var tmp = command.ExecuteScalar() ?? -1;
+
+            connection.Close();
+
+            return (long)(tmp);
         }
 
         // =========================
@@ -236,7 +258,11 @@ namespace MauiApp1.Scripts
                 "$filename",
                 fileName);
 
-            return (long)(command.ExecuteScalar() ?? -1);
+            var tmp = command.ExecuteScalar() ?? -1;
+
+            connection.Close();
+
+            return (long)(tmp);
         }
 
         // =========================
@@ -259,6 +285,8 @@ namespace MauiApp1.Scripts
                 "$id", id);
 
             command.ExecuteNonQuery();
+
+            connection.Close();
         }
 
         public static void DeleteBranch(int id)
@@ -277,6 +305,8 @@ namespace MauiApp1.Scripts
                 "$id", id);
 
             command.ExecuteNonQuery();
+
+            connection.Close();
         }
 
         public static void DeleteSave(int id)
@@ -295,6 +325,8 @@ namespace MauiApp1.Scripts
                 "$id", id);
 
             command.ExecuteNonQuery();
+
+            connection.Close();
         }
 
         // =========================
@@ -352,6 +384,8 @@ namespace MauiApp1.Scripts
                 "$autosaveperiod", autoSavePeriod);
 
             command.ExecuteNonQuery();
+
+            connection.Close();
         }
 
         public static void UpdateGameSelectedBranch(
@@ -380,6 +414,8 @@ namespace MauiApp1.Scripts
                 "$lastselectedbranch", branch_id);
 
             command.ExecuteNonQuery();
+
+            connection.Close();
         }
 
         public static void UpdateBranch(
@@ -408,6 +444,8 @@ namespace MauiApp1.Scripts
                 "$name", name);
 
             command.ExecuteNonQuery();
+
+            connection.Close();
         }
 
         public static void UpdateSave(
@@ -449,6 +487,8 @@ namespace MauiApp1.Scripts
                 fileName);
 
             command.ExecuteNonQuery();
+
+            connection.Close();
         }
 
         // =========================
@@ -506,6 +546,8 @@ namespace MauiApp1.Scripts
                 });
             }
 
+            connection.Close();
+
             return result;
         }
 
@@ -541,6 +583,8 @@ namespace MauiApp1.Scripts
                             reader["gra_id"])
                 });
             }
+
+            connection.Close();
 
             return result;
         }
@@ -582,6 +626,8 @@ namespace MauiApp1.Scripts
                 });
             }
 
+            connection.Close();
+
             return result;
         }
 
@@ -601,8 +647,12 @@ namespace MauiApp1.Scripts
             command.CommandText =
                 "SELECT COUNT(*) FROM GRA;";
 
+            var tmp = command.ExecuteScalar();
+            
+            connection.Close();
+
             return Convert.ToInt32(
-                command.ExecuteScalar());
+                tmp);
         }
 
         public static int GetBranchCount()
@@ -617,8 +667,12 @@ namespace MauiApp1.Scripts
             command.CommandText =
                 "SELECT COUNT(*) FROM BRANCH;";
 
+            var tmp = command.ExecuteScalar();
+
+            connection.Close();
+
             return Convert.ToInt32(
-                command.ExecuteScalar());
+                tmp);
         }
 
         public static int GetSaveCount()
@@ -633,8 +687,12 @@ namespace MauiApp1.Scripts
             command.CommandText =
                 "SELECT COUNT(*) FROM ZAPIS;";
 
+            var tmp = command.ExecuteScalar();
+
+            connection.Close();
+
             return Convert.ToInt32(
-                command.ExecuteScalar());
+                tmp);
         }
     }
 }

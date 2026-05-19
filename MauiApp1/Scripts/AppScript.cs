@@ -85,7 +85,6 @@ namespace MauiApp1.Scripts
         protected void OnPropertyChanged(string? name = null)
             => PropertyChanged?.Invoke(this, new PropertyChangedEventArgs(name));
     }
-
     public class SaveInfo : INotifyPropertyChanged
     {
         public int Id { get; set; } = -1;
