@@ -1,4 +1,4 @@
-using MauiApp1.Scripts;using MauiApp1.Scripts;
+using MauiApp1.Scripts;
 using System.Collections.ObjectModel;
 using System.Diagnostics;
 
