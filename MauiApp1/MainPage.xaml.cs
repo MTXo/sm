@@ -426,6 +426,30 @@ namespace MauiApp1
                     );
                 }
             }
+            RefreshNewSaveInDisplay();
+        }
+        private void RefreshNewSaveInDisplay()
+        {
+            var lastSaveFromDb = Database.GetAllSaves().LastOrDefault();
+            if (lastSaveFromDb == null) return;
+
+            var newSaveInfo = new Scripts.SaveInfo
+            {
+                Id = lastSaveFromDb.Id,
+                FileName = lastSaveFromDb.FileName,
+                BranchId = lastSaveFromDb.BranchId,
+                SaveTime = lastSaveFromDb.Date
+            };
+
+            var newDisplay = new SaveDisplayInfo
+            {
+                Save = newSaveInfo,
+                BranchName = currentBranch.Name 
+            };
+
+            displaySaves.Add(newDisplay);
+
+            UpdateSavesList();
         }
         private void SavesSearchBar_TextChanged(object? sender, TextChangedEventArgs e)
         {
@@ -451,15 +475,14 @@ namespace MauiApp1
         }
         private void UpdateSavesList()
         {
-            if (currentGame == null || currentGame.Id == -1)
+            if (currentGame?.Id <= 0)
             {
                 SavesCollectionView.ItemsSource = new ObservableCollection<SaveDisplayInfo>();
                 return;
             }
 
-            // Filtr po grze
             var gameBranchIds = AppScript.branches
-                .Where(b => b.GameId == currentGame.Id)
+                .Where(b => b.GameId == currentGame?.Id)
                 .Select(b => b.Id)
                 .ToHashSet();
 
@@ -467,13 +490,13 @@ namespace MauiApp1
                 .Where(d => gameBranchIds.Contains(d.BranchId))
                 .ToList();
 
-            // Dodatkowe filtrowanie po gałęzi (jeśli jest wybrana)
-            if (currentBranch != null && currentBranch.Id != -1)
+            if (currentBranch?.Id > 0)
             {
-                filtered = filtered
-                    .Where(d => d.BranchId == currentBranch.Id)
-                    .ToList();
+                filtered = filtered.Where(d => d.BranchId == currentBranch.Id).ToList();
             }
+
+            // Sortowanie od najnowszego
+            filtered = filtered.OrderByDescending(d => d.SaveTime).ToList();
 
             SavesCollectionView.ItemsSource = filtered;
         }

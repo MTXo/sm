@@ -204,6 +204,7 @@
                             x:Name="SavesCollectionView"
                             ItemsSource="{Binding displaySaves}"
                             SelectionMode="Single"
+                            VerticalScrollBarVisibility="Default"
                             IsVisible="True">
 
                             <CollectionView.ItemTemplate>
