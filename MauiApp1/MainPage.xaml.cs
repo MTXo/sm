@@ -341,13 +341,15 @@ namespace MauiApp1
             {
                 return;
             }
+            bool doNot = false;
             Database.GetAllBranches().Where(b => b.GameId == currentGame.Id).ToList().ForEach(b =>
             {
                 if (b.Name == BranchEntry.Text)
                 {
-                    return; // nazwa już istnieje, nie chcemy duplikatów
+                    doNot = true; // nazwa już istnieje, nie chcemy duplikatów
                 }
             });
+            if (doNot) return;
             Database.AddBranch(BranchEntry.Text, currentGame.Id);
             AppScript.branches.Add(new BranchInfo { Id = Database.GetAllBranches().Last().Id, Name = BranchEntry.Text, GameId = currentGame.Id });
             Database.UpdateGameSelectedBranch(currentGame.Id, Database.GetAllBranches().Last().Id);
