@@ -132,7 +132,7 @@ namespace MauiApp1
             name_settings.Text = currentGame.Name;
             exePathEntry.Text = currentGame.ExePath;
             savePathEntry.Text = currentGame.SavePath;
-            steamAID.Text = currentGame.SteamAppId > 0 ? currentGame.SteamAppId.ToString() : "";
+            steamAID.Text = currentGame.SteamAppId >= 0 ? currentGame.SteamAppId.ToString() : "";
 
             PopupOverlay.IsVisible = true;
 
@@ -400,6 +400,25 @@ namespace MauiApp1
                 }
             }
         }
+        private void RestoreSnapshot_Clicked(object sender, EventArgs e)
+        {
+            if (currentGame.Id != -1 && currentBranch.Id != -1 && !string.IsNullOrEmpty(currentGame.SavePath))
+            {
+                SaveDisplayInfo sdi = (SaveDisplayInfo)SavesCollectionView.SelectedItem;
+
+                string path = Path.Combine(Environment.GetFolderPath(Environment.SpecialFolder.ApplicationData), "MW Save Manager", "Backups");
+
+                List<string> files = Directory.GetFiles(path).ToList();
+
+                files.Where(f => f.Contains(sdi.Save.FileName)).ToList().ForEach(f =>
+                {
+                    Backuper.Restore(
+                        currentGame.SavePath,
+                        f
+                    );
+                });
+            }
+        }
         private void SavesSearchBar_TextChanged(object? sender, TextChangedEventArgs e)
         {
             string search = e.NewTextValue?.Trim() ?? string.Empty;
@@ -420,6 +439,14 @@ namespace MauiApp1
                 .ToList();
 
             SavesCollectionView.ItemsSource = filtered;
+        }
+        private void ClearSettings_Clicked(object sender, EventArgs e)
+        {
+            Database.CreateDatabase(true);
+            DetailsGrid.IsVisible = false;
+            currentBranch = new Scripts.BranchInfo();
+            currentGame = new Scripts.AppInfo();
+            LoadStartData();
         }
     }
 }

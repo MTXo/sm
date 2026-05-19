@@ -107,7 +107,7 @@
                                     Color="{AppThemeBinding Light=Black, Dark=White}" />
                             </Button.ImageSource>
                         </Button>
-                        <Button Text="Przywróć wybrany zapis" TextColor="{AppThemeBinding Light=Black, Dark=White}" BackgroundColor="{AppThemeBinding Light=#10000000, Dark=#10ffffff}" FontSize="14" Margin="2,2,0,0">
+                        <Button Text="Przywróć wybrany zapis" TextColor="{AppThemeBinding Light=Black, Dark=White}" BackgroundColor="{AppThemeBinding Light=#10000000, Dark=#10ffffff}" FontSize="14" Margin="2,2,0,0" Clicked="RestoreSnapshot_Clicked">
                             <Button.ImageSource>
                                 <FontImageSource
                                     FontFamily="MaterialIcons"
@@ -162,7 +162,7 @@
                         </Grid>
 
                     </VerticalStackLayout>
-                    <Border Margin="0,5,0,0" Grid.Row="3">
+                    <Border Margin="0,5,0,0" Grid.Row="3" IsVisible="False">
                         <Label Text="Autozapis" TextColor="{AppThemeBinding Light=Black, Dark=White}" />
                     </Border>
                     <VerticalStackLayout HeightRequest="58" Grid.Row="4">
@@ -333,6 +333,7 @@
             WidthRequest="800">
                 <VerticalStackLayout Spacing="10" >
                     <Label Text="Ustawienia" FontSize="20" HorizontalOptions="Center"/>
+                    <Button Text="Wyczyść ustawienia" Clicked="ClearSettings_Clicked" TextColor="Red"/>
                     <ImageButton Grid.Column="4"
                         HeightRequest="58" WidthRequest="58" VerticalOptions="End" Clicked="ClosePopupSettings_Clicked" HorizontalOptions="End">
                         <ImageButton.Source>
