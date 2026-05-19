@@ -205,6 +205,7 @@
                             ItemsSource="{Binding displaySaves}"
                             SelectionMode="Single"
                             VerticalScrollBarVisibility="Default"
+                            HeightRequest="800"
                             IsVisible="True">
 
                             <CollectionView.ItemTemplate>

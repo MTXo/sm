@@ -13,8 +13,6 @@ namespace MauiApp1
 
         bool _popupOpen = false;
 
-
-        private string _searchText = string.Empty;
         public MainPage()
         {
 
