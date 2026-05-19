@@ -12,30 +12,35 @@ namespace MauiApp1
         Scripts.BranchInfo currentBranch = new Scripts.BranchInfo();
 
         bool _popupOpen = false;
+
+
         private string _searchText = string.Empty;
         public MainPage()
         {
 
             InitializeComponent();
-
             Database.CreateDatabase();
             LoadStartData();
 
-            SavesCollectionView.ItemsSource = AppScript.saves;
+            // SavesCollectionView.ItemsSource = AppScript.saves;
+
             AppCollectionView.ItemsSource = AppScript.apps;
             BranchPicker.ItemsSource = AppScript.branches;
             BranchPicker.ItemDisplayBinding = new Binding("Name");
 
+            AppCollectionView.SelectionChanged += AppCollectionView_SelectionChanged;
             SavesSearchBar.TextChanged += SavesSearchBar_TextChanged;
+
         }
 
         private void LoadStartData()
         {
-
             AppScript.saves.Clear();
             AppScript.apps.Clear();
             AppScript.branches.Clear();
+            displaySaves.Clear();
 
+            // Gry
             foreach (var game in Database.GetAllGames())
             {
                 AppScript.apps.Add(new Scripts.AppInfo
@@ -61,11 +66,8 @@ namespace MauiApp1
                 });
             }
 
-            var branchesDict = AppScript.branches.ToDictionary(
-                b => b.Id,
-                b => b);
-
-            displaySaves.Clear();
+            // Save'y + Branch info
+            var branchesDict = AppScript.branches.ToDictionary(b => b.Id, b => b);
 
             foreach (var save in Database.GetAllSaves())
             {
@@ -79,20 +81,20 @@ namespace MauiApp1
 
                 AppScript.saves.Add(saveInfo);
 
-                // obiekt do wyświetlania z nazwą gałęzi
                 branchesDict.TryGetValue(save.BranchId, out var branch);
 
-                var display = new SaveDisplayInfo
+                displaySaves.Add(new SaveDisplayInfo
                 {
                     Save = saveInfo,
-                    BranchName = branch?.Name ?? "Nieznana gałąź",
-                };
-
-                displaySaves.Add(display);
+                    BranchName = branch?.Name ?? "Nieznana gałąź"
+                });
             }
-            SavesCollectionView.ItemsSource = displaySaves;
 
-            Debug.WriteLine($"Dane wczytane → Gier: {AppScript.apps.Count}, Gałęzi: {AppScript.branches.Count}, Zapisów: {AppScript.saves.Count}");
+            AppCollectionView.ItemsSource = AppScript.apps;
+            BranchPicker.ItemsSource = AppScript.branches;
+            BranchPicker.ItemDisplayBinding = new Binding("Name");
+
+            SavesCollectionView.ItemsSource = new ObservableCollection<SaveDisplayInfo>();
         }
         private void AddSave_Clicked(object sender, EventArgs e)
         {
@@ -228,7 +230,26 @@ namespace MauiApp1
                 DetailsGrid.IsVisible = true;
                 gameBanner.Source = await HTMLConnection.GetImageSourceAsync(currentGame.SteamAppId.ToString()); // pobieranie zdjęcia do baneru
             }
+            if (e.CurrentSelection.FirstOrDefault() is Scripts.AppInfo selectedGame)
+            {
+                currentGame = selectedGame;
 
+                var gameBranchIds = AppScript.branches
+                    .Where(b => b.GameId == selectedGame.Id)
+                    .Select(b => b.Id)
+                    .ToHashSet();
+
+                var filtered = displaySaves
+                    .Where(d => gameBranchIds.Contains(d.BranchId))
+                    .ToList();
+
+                SavesCollectionView.ItemsSource = filtered;
+            }
+            else
+            {
+                SavesCollectionView.ItemsSource = displaySaves; // jeśli nic nie wybrano
+            }
+            UpdateSavesList();
         }
         async void DeleteCurrent_Clicked(object sender, EventArgs e)
         {
@@ -377,10 +398,16 @@ namespace MauiApp1
         }
         private void BranchPicker_SelectedIndexChanged(object sender, EventArgs e)
         {
-            currentBranch = (Scripts.BranchInfo)BranchPicker.SelectedItem;
-            BranchEntry.Text = ((Scripts.BranchInfo)BranchPicker.SelectedItem)?.Name ?? "";
-            Database.UpdateGameSelectedBranch(currentGame.Id, currentBranch.Id);
-            AppScript.apps.Where(g => g.Id == currentGame.Id).FirstOrDefault()?.LastSelectedBranch = currentBranch.Id;
+            if (BranchPicker.SelectedItem is Scripts.BranchInfo branch)
+            {
+                currentBranch = branch;
+                BranchEntry.Text = branch.Name;
+
+                Database.UpdateGameSelectedBranch(currentGame.Id, currentBranch.Id);
+                AppScript.apps.Where(g => g.Id == currentGame.Id).FirstOrDefault()?.LastSelectedBranch = currentBranch.Id;
+
+                UpdateSavesList();
+            }
         }
         private void SaveSnapshot_Clicked(object sender, EventArgs e)
         {
@@ -404,20 +431,49 @@ namespace MauiApp1
         {
             string search = e.NewTextValue?.Trim() ?? string.Empty;
 
-            // Wyczyść i załaduj wszystkie jeśli puste wyszukiwanie
             if (string.IsNullOrWhiteSpace(search))
             {
-                SavesCollectionView.ItemsSource = null;
-                SavesCollectionView.ItemsSource = AppScript.saves;
+                UpdateSavesList();
                 return;
             }
 
-            // Filtrowanie
-            var filtered = AppScript.saves
+            // Pobierz aktualnie wyświetlane save'y
+            var currentList = SavesCollectionView.ItemsSource as IEnumerable<SaveDisplayInfo> ?? displaySaves;
+
+            var filtered = currentList
                 .Where(s =>
                     (s.FileName?.Contains(search, StringComparison.OrdinalIgnoreCase) == true) ||
+                    (s.BranchName?.Contains(search, StringComparison.OrdinalIgnoreCase) == true) ||
                     (s.SaveTime.ToString("dd.MM.yyyy HH:mm")?.Contains(search, StringComparison.OrdinalIgnoreCase) == true))
                 .ToList();
+
+            SavesCollectionView.ItemsSource = filtered;
+        }
+        private void UpdateSavesList()
+        {
+            if (currentGame == null || currentGame.Id == -1)
+            {
+                SavesCollectionView.ItemsSource = new ObservableCollection<SaveDisplayInfo>();
+                return;
+            }
+
+            // Filtr po grze
+            var gameBranchIds = AppScript.branches
+                .Where(b => b.GameId == currentGame.Id)
+                .Select(b => b.Id)
+                .ToHashSet();
+
+            var filtered = displaySaves
+                .Where(d => gameBranchIds.Contains(d.BranchId))
+                .ToList();
+
+            // Dodatkowe filtrowanie po gałęzi (jeśli jest wybrana)
+            if (currentBranch != null && currentBranch.Id != -1)
+            {
+                filtered = filtered
+                    .Where(d => d.BranchId == currentBranch.Id)
+                    .ToList();
+            }
 
             SavesCollectionView.ItemsSource = filtered;
         }
