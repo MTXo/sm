@@ -1,4 +1,4 @@
-using MauiApp1.Scripts;
+using MauiApp1.Scripts;using MauiApp1.Scripts;
 using System.Collections.ObjectModel;
 using System.Diagnostics;
 
@@ -6,17 +6,20 @@ namespace MauiApp1
 {
     public partial class MainPage : ContentPage
     {
+        private ObservableCollection<SaveDisplayInfo> displaySaves = new ObservableCollection<SaveDisplayInfo>();
+
         Scripts.AppInfo currentGame = new Scripts.AppInfo();
         Scripts.BranchInfo currentBranch = new Scripts.BranchInfo();
+
         bool _popupOpen = false;
         private string _searchText = string.Empty;
-        private List<ZipArchiveInfo> _allSaves = new();
-        public ObservableCollection<ZipArchiveInfo> Saves { get; set; } = new();
         public MainPage()
         {
+
+            InitializeComponent();
+
             Database.CreateDatabase();
             LoadStartData();
-            InitializeComponent();
 
             SavesCollectionView.ItemsSource = AppScript.saves;
             AppCollectionView.ItemsSource = AppScript.apps;
@@ -26,8 +29,9 @@ namespace MauiApp1
             SavesSearchBar.TextChanged += SavesSearchBar_TextChanged;
         }
 
-        private void LoadStartData() // tymczasowa funkcja do wczytywania przykładowych zapisów, docelowo będzie to pobieranie z folderu z zapisami i formatowanie ich do listy Saves, która jest powiązana z interfejsem użytkownika (SavesCollectionView)
+        private void LoadStartData()
         {
+
             AppScript.saves.Clear();
             AppScript.apps.Clear();
             AppScript.branches.Clear();
@@ -46,6 +50,7 @@ namespace MauiApp1
                     LastSelectedBranch = game.LastSelectedBranch,
                 });
             }
+
             foreach (var branch in Database.GetAllBranches())
             {
                 AppScript.branches.Add(new Scripts.BranchInfo
@@ -55,19 +60,40 @@ namespace MauiApp1
                     GameId = branch.GameId
                 });
             }
+
+            var branchesDict = AppScript.branches.ToDictionary(
+                b => b.Id,
+                b => b);
+
+            displaySaves.Clear();
+
             foreach (var save in Database.GetAllSaves())
             {
-                AppScript.saves.Add(new Scripts.SaveInfo
+                var saveInfo = new Scripts.SaveInfo
                 {
                     Id = save.Id,
                     FileName = save.FileName,
                     BranchId = save.BranchId,
                     SaveTime = save.Date
-                });
-            }
-            Debug.WriteLine("Dane zostały wczytane z bazy danych. Liczba gier: " + AppScript.apps.Count + ", liczba gałęzi: " + AppScript.branches.Count + ", liczba zapisów: " + AppScript.saves.Count);
-        }
+                };
 
+                AppScript.saves.Add(saveInfo);
+
+                // obiekt do wyświetlania z nazwą gałęzi
+                branchesDict.TryGetValue(save.BranchId, out var branch);
+
+                var display = new SaveDisplayInfo
+                {
+                    Save = saveInfo,
+                    BranchName = branch?.Name ?? "Nieznana gałąź",
+                };
+
+                displaySaves.Add(display);
+            }
+            SavesCollectionView.ItemsSource = displaySaves;
+
+            Debug.WriteLine($"Dane wczytane → Gier: {AppScript.apps.Count}, Gałęzi: {AppScript.branches.Count}, Zapisów: {AppScript.saves.Count}");
+        }
         private void AddSave_Clicked(object sender, EventArgs e)
         {
             if (currentGame.ExePath != null && currentGame.ExePath != "")
@@ -125,7 +151,6 @@ namespace MauiApp1
             );
             _popupOpen = true;
         }
-
         async Task LoadProcessesAsync()
         {
             MainThread.BeginInvokeOnMainThread(() =>
@@ -143,7 +168,6 @@ namespace MauiApp1
                 ProcessPicker.Title = "Wybierz proces...";
             });
         }
-
         async void ClosePopup_Clicked(object sender, EventArgs e)
         {
             _popupOpen = false;
@@ -159,7 +183,6 @@ namespace MauiApp1
 
             gameBanner.Source = await HTMLConnection.GetImageSourceAsync(currentGame.SteamAppId.ToString());
         }
-
         async void OpenPopupSettings_Clicked(object sender, EventArgs e)
         { 
             ClosePopup_Clicked(sender, e);
@@ -180,7 +203,6 @@ namespace MauiApp1
                 PopupContentSettings.TranslateToAsync(0, 0, 250, Easing.CubicOut)
             );
         }
-
         async void ClosePopupSettings_Clicked(object sender, EventArgs e)
         {
             await Task.WhenAll(
@@ -190,8 +212,7 @@ namespace MauiApp1
                 PopupContentSettings.TranslateToAsync(0, 50, 150, Easing.CubicIn)
             );
             PopupOverlaySettings.IsVisible = false;
-        }
-        
+        }    
         private async void AppCollectionView_SelectionChanged(object sender, SelectionChangedEventArgs e)
         {
             if (e.CurrentSelection.Count > 0)
@@ -217,13 +238,11 @@ namespace MauiApp1
             DetailsGrid.IsVisible = false;
             ClosePopup_Clicked(sender, e);
         }
-
         private void Name_Unfocused(object sender, FocusEventArgs e)
         {
             currentGame.Name = name_settings.Text;
             Database.UpdateGame(currentGame.Id, currentGame.Name, currentGame.SteamAppId, currentGame.ExePath, currentGame.SavePath, currentGame.AutoSave, currentGame.AutoSaveInterval);
         }
-
         private void ProcessPicker_SelectedIndexChanged(object sender, EventArgs e)
         {
             try
@@ -242,7 +261,6 @@ namespace MauiApp1
                 // nic   
             }
         }
-
         private void exePathEntry_Unfocused(object sender, FocusEventArgs e)
         {
             currentGame.ExePath = exePathEntry.Text;
@@ -298,7 +316,6 @@ namespace MauiApp1
             view.WidthRequest = size;
             view.HeightRequest = size;
         }
-
         private void SaveBranchButton_Clicked(object sender, EventArgs e)
         {
             if (String.IsNullOrEmpty(BranchEntry.Text))
@@ -337,17 +354,19 @@ namespace MauiApp1
         }
         private void AddBranchButton_Clicked(object sender, EventArgs e)
         {
-            if(String.IsNullOrEmpty(BranchEntry.Text))
+            if (String.IsNullOrEmpty(BranchEntry.Text))
             {
                 return;
             }
+            bool doNot = false;
             Database.GetAllBranches().Where(b => b.GameId == currentGame.Id).ToList().ForEach(b =>
             {
                 if (b.Name == BranchEntry.Text)
                 {
-                    return; // nazwa już istnieje, nie chcemy duplikatów
+                    doNot = true; // nazwa już istnieje, nie chcemy duplikatów
                 }
             });
+            if (doNot) return;
             Database.AddBranch(BranchEntry.Text, currentGame.Id);
             AppScript.branches.Add(new BranchInfo { Id = Database.GetAllBranches().Last().Id, Name = BranchEntry.Text, GameId = currentGame.Id });
             Database.UpdateGameSelectedBranch(currentGame.Id, Database.GetAllBranches().Last().Id);
@@ -356,7 +375,6 @@ namespace MauiApp1
             BranchPicker.SelectedItem = AppScript.branches.Last();
             currentBranch = AppScript.branches.Last();
         }
-
         private void BranchPicker_SelectedIndexChanged(object sender, EventArgs e)
         {
             currentBranch = (Scripts.BranchInfo)BranchPicker.SelectedItem;
@@ -364,7 +382,6 @@ namespace MauiApp1
             Database.UpdateGameSelectedBranch(currentGame.Id, currentBranch.Id);
             AppScript.apps.Where(g => g.Id == currentGame.Id).FirstOrDefault()?.LastSelectedBranch = currentBranch.Id;
         }
-
         private void SaveSnapshot_Clicked(object sender, EventArgs e)
         {
             if (currentGame.Id != -1 && currentBranch.Id != -1 && !string.IsNullOrEmpty(currentGame.SavePath))
@@ -383,29 +400,26 @@ namespace MauiApp1
                 }
             }
         }
-
         private void SavesSearchBar_TextChanged(object? sender, TextChangedEventArgs e)
         {
-            _searchText = e.NewTextValue?.Trim() ?? string.Empty;
+            string search = e.NewTextValue?.Trim() ?? string.Empty;
 
-            if (string.IsNullOrWhiteSpace(_searchText))
+            // Wyczyść i załaduj wszystkie jeśli puste wyszukiwanie
+            if (string.IsNullOrWhiteSpace(search))
             {
-                Saves.Clear();
-                foreach (var save in _allSaves)
-                    Saves.Add(save);
+                SavesCollectionView.ItemsSource = null;
+                SavesCollectionView.ItemsSource = AppScript.saves;
+                return;
             }
-            else
-            {
-                var filtered = _allSaves.Where(s =>
-                    (s.Description?.Contains(_searchText, StringComparison.OrdinalIgnoreCase) == true) ||
-                    (s.GameName?.Contains(_searchText, StringComparison.OrdinalIgnoreCase) == true) ||
-                    (s.FileName?.Contains(_searchText, StringComparison.OrdinalIgnoreCase) == true)
-                ).ToList();
 
-                Saves.Clear();
-                foreach (var save in filtered)
-                    Saves.Add(save);
-            }
+            // Filtrowanie
+            var filtered = AppScript.saves
+                .Where(s =>
+                    (s.FileName?.Contains(search, StringComparison.OrdinalIgnoreCase) == true) ||
+                    (s.SaveTime.ToString("dd.MM.yyyy HH:mm")?.Contains(search, StringComparison.OrdinalIgnoreCase) == true))
+                .ToList();
+
+            SavesCollectionView.ItemsSource = filtered;
         }
     }
 }
